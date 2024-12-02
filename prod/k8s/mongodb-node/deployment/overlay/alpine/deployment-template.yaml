@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %APP%-%NODE%
+spec:
+  template:
+    spec:
+      containers:
+      - name: %APP%-%NODE%
+        imagePullPolicy: Always
+        volumeMounts:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - %NODE%

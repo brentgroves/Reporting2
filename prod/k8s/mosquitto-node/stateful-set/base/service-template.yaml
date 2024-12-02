@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: %APP%-%NODE%-svc
+  labels:
+    app: %APP%-%NODE%
+spec:
+  selector:
+    app: %APP%-%NODE%
+  type: NodePort  

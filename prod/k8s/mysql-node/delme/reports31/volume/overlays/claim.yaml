@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-reports31-pv-claim
+      
+

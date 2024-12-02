@@ -1,0 +1,40 @@
+{
+  "signing": {
+    "profiles": {
+      "server": {
+        "expiry": "87600h",
+        "usages": [
+          "signing",
+          "key encipherment",
+          "server auth"
+        ],
+        "auth_key": "client"
+      },
+      "self-signed-ca": {
+        "expiry": "87600h",
+        "usages": [
+          "signing",
+          "key encipherment",
+          "server auth"
+        ],
+        "auth_key": "client"
+      },
+      "client": {
+          "expiry": "87600h",
+          "usages": [
+            "signing",
+            "key encipherment",
+            "client auth"
+          ],
+          "auth_key": "client"
+      }
+    }
+  },
+  "auth_keys": {
+    "client": {
+      "type":"standard",
+      "key":"F8DACFCC00D330F55740D00C87DA8D39"
+    }
+  }
+}
+

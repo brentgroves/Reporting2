@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-reports33
+spec:
+  selector:
+    matchLabels:
+      app: mysql-reports33
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-reports33
+    spec:
+      # nodeName: reports3 # schedule pod to specific node
+      containers:
+      - image: brentgroves/mysql:8.0
+        name: mysql-reports33
+        env:
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+          name: mysql-reports33
+        volumeMounts:
+        - name: mysql-reports33-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-reports33-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-reports33-pv-claim

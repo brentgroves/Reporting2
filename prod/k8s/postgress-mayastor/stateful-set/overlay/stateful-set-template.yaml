@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: %APP%
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: %APP%
+        imagePullPolicy: Always
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password3
+              name: lastpass
+        - name: TZ
+          value: America/Fort_Wayne
+  volumeClaimTemplates:
+  - metadata:
+      name: %APP%-store
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "mayastor-3"
+      resources:
+        requests:
+          storage: %SIZE%

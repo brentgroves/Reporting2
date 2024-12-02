@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: etl-reports11
+  name: etl-reports11
+spec:
+  ports:
+  - name: http
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: etl-reports11
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: etl-reports11
+  name: etl-reports11
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etl-reports11
+  template:
+    metadata:
+      labels:
+        app: etl-reports11
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - reports11
+      containers:
+      - args:
+        - -c
+        - 'cron -f '
+        command:
+        - /bin/sh
+        env:
+        - name: MYSQL_HOST
+          value: reports11
+        - name: MYSQL_PORT
+          value: "30011"
+        - name: AZURE_DW
+          value: "0"
+        image: brentgroves/etl-reports11:1
+        imagePullPolicy: Always
+        name: etl-reports11
+        volumeMounts:
+        - mountPath: /etc/foo
+          name: foo
+          readOnly: true
+      dnsPolicy: Default
+      hostNetwork: true
+      restartPolicy: Always
+      volumes:
+      - name: foo
+        secret:
+          optional: false
+          secretName: db-user-pass

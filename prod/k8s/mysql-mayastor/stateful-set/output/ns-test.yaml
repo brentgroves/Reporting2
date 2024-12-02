@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ns-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ns-test
+  serviceName: nstest
+  template:
+    metadata:
+      labels:
+        app: nstest
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password3
+              name: lastpass
+        - name: TZ
+          value: America/Fort_Wayne
+        image: brentgroves/mysql:8.0
+        imagePullPolicy: Always
+        name: nstest
+        ports:
+        - containerPort: 3306
+          name: nstest-port
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: nstest-store
+      terminationGracePeriodSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: nstest-store
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: mayastor-3

@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mosquitto-reports33
+  labels:
+    app: mosquitto-reports33
+spec:
+  serviceName: mosquitto-reports33-svc
+  selector:
+    matchLabels:
+      app: mosquitto-reports33
+  template:
+    metadata:
+      labels:
+        app: mosquitto-reports33
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - reports33
+      # nodeName: reports3 # schedule pod to specific node
+      containers:
+      - name: mosquitto-reports33      
+        image: eclipse-mosquitto:2.0.15
+        ports:
+        - name: reports33-mqtt
+          containerPort: 1883
+          protocol: TCP
+        volumeMounts:
+        - name: mosquitto-reports33-data-dir
+          mountPath: /mosquitto
+      volumes:
+      - name: mosquitto-reports33-data-dir
+        persistentVolumeClaim:
+          claimName: mosquitto-reports33-pvc

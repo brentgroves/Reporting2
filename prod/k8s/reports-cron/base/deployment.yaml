@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports31
+  labels:
+    app: reports31
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: reports31
+  template:
+    metadata:
+      labels:
+        app: reports31
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: reports31-cron
+        image: brentgroves/reports-cron:1
+        volumeMounts:
+          - name: reports31-volume
+            mountPath: /apps
+      initContainers:            
+      - name: reports31-volume-init
+        image: brentgroves/reports-volume-init:1
+        volumeMounts:
+          - name: reports31-volume
+            mountPath: /init-data
+        command: ["/bin/sh"]
+        args: ["-c", "cp -R /volume/* /init-data/"]
+      volumes:
+      - name: reports31-volume
+        emptyDir: {}
+      - name: db-user-pass
+        secret:
+          secretName: db-user-pass
+          optional: false 
+      restartPolicy: Always  

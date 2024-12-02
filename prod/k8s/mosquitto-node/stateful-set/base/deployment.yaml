@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto-reports31
+spec:
+  selector:
+    matchLabels:
+      app: mosquitto-reports31
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mosquitto-reports31
+    spec:
+      # nodeName: reports3 # schedule pod to specific node
+      containers:
+      - image: eclipse-mosquitto:2.0.15
+        name: mosquitto-reports31
+        ports:
+        - containerPort: 1883
+          protocol: TCP
+          name: reports31-mqtt
+        volumeMounts:
+        - name: mosquitto-reports31-persistent-storage
+          mountPath: /mosquitto
+      volumes:
+      - name: mosquitto-reports31-persistent-storage
+        persistentVolumeClaim:
+          claimName: mosquitto-reports31-pv-claim

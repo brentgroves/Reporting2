@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %APP_NAME%
+spec:
+  selector:
+    matchLabels:
+      app: %APP_NAME%
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: %APP_NAME%
+    spec:
+      # nodeName: reports3 # schedule pod to specific node
+      containers:
+      - image: brentgroves/mysql:8.0
+        name: %APP_NAME%
+        env:
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+          name: %APP_NAME%
+        volumeMounts:
+        - name: %APP_NAME%-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: %APP_NAME%-persistent-storage
+        persistentVolumeClaim:
+          claimName: %APP_NAME%-pv-claim

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports31
+spec:
+  template:
+    spec:
+      containers:
+      - name: reports31-cron
+        env:
+        # which database to use
+        - name: MYSQL_HOST
+          value: "reports31"
+        - name: MYSQL_PORT
+          value: "30031"
+        - name: AZURE_DW
+          value: "0"
+        # command: ["/bin/sh"]
+        # args:
+        #   - -c
+        #   - >-
+        #       cron -f 
+        # command: ["/bin/sleep", "3650d"]
+        command: ["/bin/sh"]
+        args: ["-c", "cd /apps/fixes; ./fixes.sh reports31 30031 0; cron -f"]
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: db-user-pass
+          mountPath: "/etc/db-user-pass"
+          readOnly: true
+      initContainers:            
+      - name: reports31-volume-init
+        imagePullPolicy: Always
+
+      affinity:               
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - reports31

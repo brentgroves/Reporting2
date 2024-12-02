@@ -1,0 +1,13 @@
+total 2436
+drwxr-xr-x 3 bgroves domain users    4096 Sep 23 13:13 .
+drwxr-xr-x 6 bgroves domain users    4096 Sep 23 12:12 ..
+-rwxr-xr-x 1 bgroves domain users    8613 Sep 23 12:58 call_shell.py
+-rw-r--r-- 1 bgroves domain users       0 Sep 23 13:13 contents.txt
+-rw-r--r-- 1 bgroves domain users 2206495 Sep 23 12:11 dsp.pdf
+-rw-r--r-- 1 bgroves domain users    1253 Sep 23 12:11 github.png
+drwxr-xr-x 2 bgroves domain users    4096 Sep 23 12:50 lv2
+-rwxr-xr-x 1 bgroves domain users    4685 Sep 23 12:53 main.sh
+-rwxr-xr-x 1 bgroves domain users     869 Sep 23 13:09 run_shell_command.py
+-rwxrwxrwx 1 bgroves domain users    2276 Sep 23 12:11 send_email_with_attachment.py
+-rw-r--r-- 1 bgroves domain users    1438 Aug 26 14:26 shell-commands.md
+-rw-r--r-- 1 bgroves domain users  234226 Sep 23 12:11 TrialBalanceLinked.xlsx

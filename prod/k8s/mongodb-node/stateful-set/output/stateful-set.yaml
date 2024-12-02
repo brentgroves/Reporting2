@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mongodb-moto
+  name: mongodb-moto-svc
+spec:
+  ports:
+  - name: mongodb-moto-port
+    nodePort: 30311
+    port: 27017
+    protocol: TCP
+    targetPort: moto-mongo
+  selector:
+    app: mongodb-moto
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: mongodb-moto
+  name: mongodb-moto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-moto
+  serviceName: mongodb-moto-svc
+  template:
+    metadata:
+      labels:
+        app: mongodb-moto
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - moto.busche-cnc.com
+      containers:
+      - env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: mongo-root-username
+              name: mongodb-secret
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongo-root-password
+              name: mongodb-secret
+        image: mongo:6.0.3
+        imagePullPolicy: Always
+        name: mongodb-moto
+        ports:
+        - containerPort: 27017
+          name: moto-mongo
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongodb-moto-data-dir
+        - mountPath: /docker-entrypoint-initdb.d
+          name: mongodb-scripts
+          readOnly: true
+        - mountPath: /config
+          name: mongodb-configmap
+          readOnly: true
+      volumes:
+      - configMap:
+          items:
+          - key: ensure-users.js
+            path: ensure-users.js
+          name: mongodb-configmap
+        name: mongodb-scripts
+      - configMap:
+          items:
+          - key: mongo.conf
+            path: mongo.conf
+          name: mongodb-configmap
+        name: mongodb-configmap
+      - name: mongodb-moto-data-dir
+        persistentVolumeClaim:
+          claimName: mongodb-moto-pvc

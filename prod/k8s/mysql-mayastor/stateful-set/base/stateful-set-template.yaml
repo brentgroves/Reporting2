@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: %APP%
+spec:
+  selector:
+    matchLabels:
+      app: %APP%
+  serviceName: "%APP%"
+  template:
+    metadata:
+      labels:
+        app: %APP%
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: %APP%
+        image: brentgroves/mysql:%VER%
+        ports:
+        - name: %TARGET_PORT_NAME%
+          containerPort: %TARGET_PORT%
+          protocol: TCP
+        volumeMounts:
+        - name: %APP%-store
+          mountPath: /var/lib/mysql

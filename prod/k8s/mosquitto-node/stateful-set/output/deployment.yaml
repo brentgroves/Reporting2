@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mosquitto-reports31-svc
+spec:
+  ports:
+  - name: mosquitto-reports31-port
+    nodePort: 30231
+    port: 1883
+    protocol: TCP
+    targetPort: reports31-mqtt
+  selector:
+    app: mosquitto-reports31
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto-reports31
+spec:
+  selector:
+    matchLabels:
+      app: mosquitto-reports31
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mosquitto-reports31
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - reports31
+      containers:
+      - image: eclipse-mosquitto:2.0.15
+        name: mosquitto-reports31
+        ports:
+        - containerPort: 1883
+          name: reports31-mqtt
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /mosquitto
+          name: mosquitto-reports31-persistent-storage
+      volumes:
+      - name: mosquitto-reports31-persistent-storage
+        persistentVolumeClaim:
+          claimName: mosquitto-reports31-pv-claim

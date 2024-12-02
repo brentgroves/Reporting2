@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etl-reports11
+  labels:
+    app: etl-reports11
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etl-reports11
+  template:
+    metadata:
+      labels:
+        app: etl-reports11
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: etl-reports11
+        image: brentgroves/etl-reports11:1
+      volumes:
+      - name: foo
+        secret:
+          secretName: db-user-pass
+          optional: false # default setting; "mysecret" must exist    
+        # imagePullPolicy: IfNotPresent
+      restartPolicy: Always  

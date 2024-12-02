@@ -1,0 +1,17 @@
+{
+  "signing": {
+    "default": {
+      "auth_key": "key1",
+      "remote": "caserver"
+    }
+  },
+  "auth_keys": {
+    "key1": {
+    "key":"F8DACFCC00D330F55740D00C87DA8D39",
+    "type": "standard"
+    }
+  },
+  "remotes": {
+    "caserver": "ca1.mysite.com:8888"
+  }
+}

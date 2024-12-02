@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %NODE%
+  labels:
+    app: %NODE%
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: %NODE%
+  template:
+    metadata:
+      labels:
+        app: %NODE%
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: %NODE%-etl
+        image: brentgroves/reports-etl:%VER%
+        volumeMounts:
+          - name: %NODE%-etl-volume
+            mountPath: /app/etl
+          - name: %NODE%-crontab-volume
+            mountPath: /app/crontab
+      initContainers:            
+      - name: %NODE%-crontab-init
+        image: brentgroves/reports-crontab-init:%VER%
+        volumeMounts:
+          - name: %NODE%-crontab-volume
+            mountPath: /init-data
+        command: ["/bin/sh"]
+        args: ["-c", "cp -R /crontab/* /init-data/"]
+      - name: %NODE%-etl-init
+        image: brentgroves/reports-etl-init:%VER%
+        volumeMounts:
+          - name: %NODE%-etl-volume
+            mountPath: /init-data
+        command: ["/bin/sh"]
+        args: ["-c", "cp -R /etl/* /init-data/"]
+      volumes:
+      - name: %NODE%-etl-volume
+        emptyDir: {}
+      - name: %NODE%-crontab-volume
+        emptyDir: {}
+      - name: foo
+        secret:
+          secretName: db-user-pass
+          optional: false # default setting; "mysecret" must exist    
+        # imagePullPolicy: IfNotPresent
+      restartPolicy: Always  

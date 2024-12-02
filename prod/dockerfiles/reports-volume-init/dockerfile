@@ -1,0 +1,119 @@
+# ARG UBUNTU_VER=18.04
+ARG UBUNTU_VER=22.04
+
+# ARG MYSQL_CONNECTOR_VER=8.0.18 use pip install mysql-connector-python could not get conda version to install
+FROM ubuntu:${UBUNTU_VER}
+# FROM ubuntu:20.04
+
+RUN apt-get update && apt-get install -yq \
+  tree \
+  vim \
+  cron \
+  && rm -rf /var/lib/apt/lists/*
+
+# https://www.freecodecamp.org/news/docker-cache-tutorial/
+# docker build -t my-custom-nginx --build-arg CACHEBUST=$(date +%s) .
+# Custom cache invalidation
+ARG CACHEBUST=1
+
+# COPY ./install/cron/etl /etc/cron.d/etl
+# COPY ./install/cron/${NODE} /etc/cron.d/etl-crontab
+# https://www.howtogeek.com/devops/how-to-use-cron-with-your-docker-containers/
+# RUN chmod 0644 /etc/cron.d/etl && crontab /etc/cron.d/etl
+
+WORKDIR /volume/api
+COPY ./volume/api .
+
+WORKDIR /volume/validation
+COPY ./volume/validation/*.py ./
+COPY ./volume/validation/*.wsdl ./
+
+WORKDIR /volume/PipeLine
+COPY ./volume/PipeLine .
+
+WORKDIR /volume/wsdl
+COPY ./volume/wsdl .
+
+WORKDIR /volume/AccountingYearCategoryType
+COPY ./volume/AccountingYearCategoryType .
+
+WORKDIR /volume/AccountingAccount
+COPY ./volume/AccountingAccount .
+
+WORKDIR /volume/AccountingPeriod
+COPY ./volume/AccountingPeriod .
+
+WORKDIR /volume/AccountingPeriodRanges
+COPY ./volume/AccountingPeriodRanges .
+
+WORKDIR /volume/AccountingStartPeriodUpdate
+COPY ./volume/AccountingStartPeriodUpdate .
+
+WORKDIR /volume/AccountingBalanceAppendPeriodRange
+COPY ./volume/AccountingBalanceAppendPeriodRange .
+
+WORKDIR /volume/AccountActivitySummaryGetOpenPeriodRange
+COPY ./volume/AccountActivitySummaryGetOpenPeriodRange .
+
+WORKDIR /volume/AccountPeriodBalanceRecreatePeriodRange
+COPY ./volume/AccountPeriodBalanceRecreatePeriodRange .
+
+WORKDIR /volume/AccountPeriodBalanceRecreateOpenPeriodRange
+COPY ./volume/AccountPeriodBalanceRecreateOpenPeriodRange .
+
+WORKDIR /volume/AccountPeriodBalanceToMongoDB
+COPY ./volume/AccountPeriodBalanceToMongoDB .
+
+WORKDIR /volume/DailyShiftReportGet
+COPY ./volume/DailyShiftReportGet .
+
+WORKDIR /volume/TrialBalanceExcel
+COPY ./volume/TrialBalanceExcel .
+
+WORKDIR /volume/misc
+COPY ./volume/misc .
+
+WORKDIR /volume/bin
+COPY ./volume/bin .
+
+WORKDIR /volume/lib
+COPY ./volume/lib .
+
+WORKDIR /volume/src
+COPY ./volume/src .
+
+WORKDIR /volume/modules
+COPY ./volume/modules .
+
+WORKDIR /volume/CronTab
+COPY ./volume/CronTab .
+
+WORKDIR /volume/ReportQueue
+COPY ./volume/ReportQueue .
+
+WORKDIR /volume/fixes
+COPY ./volume/fixes .
+
+RUN mkdir -p /volume/output
+
+WORKDIR /volume
+
+
+# Start the main program.
+# https://www.howtogeek.com/devops/how-to-use-cron-with-your-docker-containers/
+# https://www.dev-diaries.com/social-posts/conditional-logic-in-dockerfile/
+# https://www.bmc.com/blogs/docker-cmd-vs-entrypoint/
+
+######EXPOSE 5000
+######CMD ["flask", "run", "--host=0.0.0.0", "--port=5000" ]
+# Start the main program.
+# https://www.howtogeek.com/devops/how-to-use-cron-with-your-docker-containers/
+# ENTRYPOINT ["cron", "-f"] 
+
+# So docker never exits for debug only
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+# Debug Only
+# docker run -d brentgroves/
+# docker exec -it 9092193339 /bin/sh
+# flask run --host=0.0.0.0 --port=5000

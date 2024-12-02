@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bi-connector-clusterip
+  labels:
+    app: bi-connector-clusterip
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3307
+    targetPort: 3307
+  selector:
+    app: bi-connector
+# reports-mongodb-svc   ClusterIP      None         27017/TCP         7d4h

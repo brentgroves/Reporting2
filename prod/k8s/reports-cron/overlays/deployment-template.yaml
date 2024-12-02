@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %NODE%
+spec:
+  template:
+    spec:
+      containers:
+      - name: %NODE%-cron
+        env:
+        # which database to use
+        - name: MYSQL_HOST
+          value: "%NODE%"
+        - name: MYSQL_PORT
+          value: "%MYSQL_PORT%"
+        - name: AZURE_DW
+          value: "%AZURE_DW%"
+        # command: ["/bin/sh"]
+        # args:
+        #   - -c
+        #   - >-
+        #       cron -f 
+        # command: ["/bin/sleep", "3650d"]
+        command: ["/bin/sh"]
+        args: ["-c", "cd /apps/fixes; ./fixes.sh %NODE% %MYSQL_PORT% %AZURE_DW%; cron -f"]
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: db-user-pass
+          mountPath: "/etc/db-user-pass"
+          readOnly: true
+      initContainers:            
+      - name: %NODE%-volume-init
+        imagePullPolicy: Always
+
+      affinity:               
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - %NODE%

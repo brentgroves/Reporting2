@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mosquitto-reports33
+  name: mosquitto-reports33-svc
+spec:
+  ports:
+  - name: mosquitto-reports33-port
+    nodePort: 30233
+    port: 1883
+    protocol: TCP
+    targetPort: reports33-mqtt
+  selector:
+    app: mosquitto-reports33
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: mosquitto-reports33
+  name: mosquitto-reports33
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto-reports33
+  serviceName: mosquitto-reports33-svc
+  template:
+    metadata:
+      labels:
+        app: mosquitto-reports33
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - reports33
+      containers:
+      - image: eclipse-mosquitto:2.0.15
+        name: mosquitto-reports33
+        ports:
+        - containerPort: 1883
+          name: reports33-mqtt
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /mosquitto
+          name: mosquitto-reports33-data-dir
+      volumes:
+      - name: mosquitto-reports33-data-dir
+        persistentVolumeClaim:
+          claimName: mosquitto-reports33-pvc

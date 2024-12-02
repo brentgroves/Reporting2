@@ -1,0 +1,38 @@
+{
+  "signing": {
+      "default": {
+        "expiry": "43800h"
+      },
+      "profiles": {
+        "server": {
+          "auth_remote": {
+            "auth_key": "client",
+            "remote": "ca"
+          },
+          "expiry": "43800h",
+          "usages": [
+            "signing",
+            "key encipherment",
+            "server auth"
+          ]
+        },
+        "client": {
+            "expiry": "8760h",
+            "usages": [
+              "signing",
+              "key encipherment",
+              "client auth"
+            ]
+        }
+      }
+  },
+  "auth_keys": {
+    "client": {
+      "type": "standard",
+      "key": "D08E2AD3153827496ADDA6FB104624B2"
+    }
+  },
+  "remotes": {
+    "ca": "0.0.0.0:8080"
+  }
+}

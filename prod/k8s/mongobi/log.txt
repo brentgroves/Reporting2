@@ -1,0 +1,19 @@
+2023-03-03T22:38:36.163+0000 E NETWORK    [conn117] handshake error: ERROR 1043 (08S01): recv handshake response error: read tcp 10.244.0.18:3307->10.244.0.1:58182: read: connection reset by peer
+2023-03-03T22:38:36.164+0000 I NETWORK    [conn117] end connection 10.244.0.1:58182 (0 connections now open)
+2023-03-03T22:38:36.165+0000 I NETWORK    [conn118] connection accepted from 10.244.0.1:24294 #118 (1 connection now open)
+2023-03-03T22:38:42.176+0000 E NETWORK    [conn118] handshake error: ERROR 1043 (08S01): recv handshake response error: read tcp 10.244.0.18:3307->10.244.0.1:24294: read: connection reset by peer
+2023-03-03T22:38:42.176+0000 I NETWORK    [conn118] end connection 10.244.0.1:24294 (0 connections now open)
+2023-03-03T22:38:42.177+0000 I NETWORK    [conn119] connection accepted from 10.244.0.1:24931 #119 (1 connection now open)
+2023-03-03T22:38:48.190+0000 E NETWORK    [conn119] handshake error: ERROR 1043 (08S01): recv handshake response error: read tcp 10.244.0.18:3307->10.244.0.1:24931: read: connection reset by peer
+2023-03-03T22:38:48.190+0000 I NETWORK    [conn119] end connection 10.244.0.1:24931 (0 connections now open)
+2023-03-03T22:38:48.190+0000 I NETWORK    [conn120] connection accepted from 10.244.0.1:43933 #120 (1 connection now open)
+2023-03-03T22:38:50.977+0000 I CONTROL    [stats] utimens=782772000	stimens=660464000	maxrss=32616	minflt=8580	majflt=0
+2023-03-03T22:38:54.199+0000 E NETWORK    [conn120] handshake error: ERROR 1043 (08S01): recv handshake response error: read tcp 10.244.0.18:3307->10.244.0.1:43933: read: connection reset by peer
+2023-03-03T22:38:54.199+0000 I NETWORK    [conn120] end connection 10.244.0.1:43933 (0 connections now open)
+2023-03-03T22:38:54.200+0000 I NETWORK    [conn121] connection accepted from 10.244.0.1:33174 #121 (1 connection now open)
+
+try changing mongodb connection string to headless svc local address.
+
+https://blog.knoldus.com/what-is-headless-service-setup-a-service-in-kubernetes/
+
+reports-mongodb-svc

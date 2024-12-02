@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mongodb-moto
+  name: mongodb-moto-svc
+spec:
+  selector:
+    app: mongodb-moto
+  type: NodePort  

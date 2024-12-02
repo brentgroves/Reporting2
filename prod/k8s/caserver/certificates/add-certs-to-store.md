@@ -1,0 +1,1 @@
+https://jite.eu/2019/2/6/ca-with-cfssl/#adding-your-ca-to-the-computers-certificate-storage

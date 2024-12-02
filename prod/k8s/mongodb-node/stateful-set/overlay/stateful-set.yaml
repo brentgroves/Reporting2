@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-moto
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: mongodb-moto
+        imagePullPolicy: Always
+        env:
+        # - name: MONGO_INITDB_ROOT_USERNAME_FILE
+        #   value: /etc/mongodb-users/mongo-root-username
+        # - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+        #   value: /etc/mongodb-users/mongo-root-password
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: mongo-root-username
+              name: mongodb-secret
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongo-root-password
+              name: mongodb-secret

@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %APP%-%NODE%
+spec:
+  template:
+    spec:
+      containers:
+      - image: eclipse-mosquitto:2.0.15
+        name: %APP%-%NODE%
+        env:
+        # - name: TZ
+        #   value: America/Fort_Wayne
+      # https://stackoverflow.com/questions/60247100/hostpath-assign-persistentvolume-to-the-specific-work-node-in-cluster
+      # Don't need a persistent volume claim since this is a simple hostpath
+      # which can be set in the deployment
+      affinity:               
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - %NODE%

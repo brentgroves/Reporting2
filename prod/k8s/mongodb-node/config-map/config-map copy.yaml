@@ -1,0 +1,23 @@
+---
+# https://phoenixnap.com/kb/kubernetes-mongodb#step-5-create-a-configmap
+# https://www.mongodb.com/docs/mongodb-shell/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-configmap
+data:
+  mongo.conf: |
+    storage:
+      dbPath: /data/db
+  ensure-users.js: |
+    const rootUser=process.env.MONGO_INITDB_ROOT_USERNAME;
+    const rootPass=process.env.MONGO_INITDB_ROOT_PASSWORD;
+    # const rootUser = cat('/etc/mongodb-users/mongo-root-username');
+    # const rootPass = cat('/etc/mongodb-users/mongo-root-password');
+    const adminDb = db.getSiblingDB('admin');
+    adminDb.auth(rootUser, rootPass);
+    print('Successfully authenticated admin user');
+
+    adminDb.createUser({user: "test", pwd: "test", roles:[{role: "userAdminAnyDatabase" , db:"admin"}]});
+    print('Successfully created admin user');
+

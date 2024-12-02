@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %APP%-%NODE%
+spec:
+  selector:
+    matchLabels:
+      app: %APP%-%NODE%
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: %APP%-%NODE%
+    spec:
+      # nodeName: reports3 # schedule pod to specific node
+      containers:
+      - image: eclipse-mosquitto:2.0.15
+        name: %APP%-%NODE%
+        ports:
+        - containerPort: %TARGET_PORT%
+          protocol: TCP
+          name: %NODE%-%TARGET_PORT_NAME%
+        volumeMounts:
+        - name: %APP%-%NODE%-persistent-storage
+          mountPath: /mosquitto
+      volumes:
+      - name: %APP%-%NODE%-persistent-storage
+        persistentVolumeClaim:
+          claimName: %APP%-%NODE%-pv-claim

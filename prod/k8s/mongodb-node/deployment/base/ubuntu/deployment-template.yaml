@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %APP%-%NODE%
+  labels:
+    app: %APP%-%NODE%
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: %APP%-%NODE%
+  template:
+    metadata:
+      labels:
+        app: %APP%-%NODE%
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: %APP%-%NODE%
+        image: brentgroves/mongodb:%VER%
+        ports:
+        - containerPort: %TARGET_PORT%
+          name: %NODE%-%TARGET_PORT_NAME%
+          protocol: TCP
+        volumeMounts:
+        - name: %NODE%-volume
+          mountPath: /apps
+        - name: %APP%-%NODE%-data-dir
+          mountPath: "/data/db"
+      initContainers:            
+      - name: %NODE%-volume-init
+        image: brentgroves/reports-volume-init:%VER%
+        volumeMounts:
+          - name: %NODE%-volume
+            mountPath: /init-data
+        command: ["/bin/sh"]
+        args: ["-c", "cp -R /volume/* /init-data/"]
+      volumes:
+      - name: %NODE%-volume
+        emptyDir: {}
+      - name: db-user-pass
+        secret:
+          secretName: db-user-pass
+          optional: false 
+      - name: %APP%-%NODE%-data-dir
+        persistentVolumeClaim:
+          claimName: %APP%-%NODE%-pvc
+      restartPolicy: Always  

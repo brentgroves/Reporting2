@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongobi
+  namespace: mongo
+spec:
+  serviceName: mongobi
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongobi
+  template:
+    metadata:
+      labels:
+        app: mongobi
+        selector: mongobi
+    spec:
+      containers:
+      - name: mongobi
+        image: brentgroves/mongobi:1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3307
+          name: mongobi-port
+          protocol: TCP
+

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etl-reports31
+  labels:
+    app: etl-reports31
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etl-reports31
+  template:
+    metadata:
+      labels:
+        app: etl-reports31
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: etl-reports31
+        image: brentgroves/etl-reports31:1
+        env:
+        # which database to use
+        - name: MYSQL_HOST
+          value: "reports31"
+        - name: MYSQL_PORT
+          value: "30031"
+        - name: AZURE_DW
+          value: "0"
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - >-
+              cron -f 
+        # command: ["/bin/sleep", "3650d"]
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: foo
+          mountPath: "/etc/foo"
+          readOnly: true
+      affinity:               
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - reports31
+      volumes:
+      - name: foo
+        secret:
+          secretName: db-user-pass
+          optional: false # default setting; "mysecret" must exist    
+        # imagePullPolicy: IfNotPresent
+      restartPolicy: Always  

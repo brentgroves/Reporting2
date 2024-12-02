@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %APP%-%NODE%
+spec:
+  template:
+    spec:
+      containers:
+      - name: %APP%-%NODE%
+        env:
+        # which database to use
+        - name: MYSQL_HOST
+          value: "%NODE%"
+        - name: MYSQL_PORT
+          value: "%MYSQL_PORT%"
+        - name: AZURE_DW
+          value: "%AZURE_DW%"
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: password
+        command: ["/bin/sh"]
+        args: ["-c", "cd /apps/fixes; ./fixes.sh %NODE% %MYSQL_PORT% %AZURE_DW%; mongod --bind_ip_all --dbpath /data/db"]
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: db-user-pass
+          mountPath: "/etc/db-user-pass"
+          readOnly: true
+      initContainers:            
+      - name: %NODE%-volume-init
+        imagePullPolicy: Always
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - %NODE%

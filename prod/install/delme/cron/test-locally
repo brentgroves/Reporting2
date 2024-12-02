@@ -1,0 +1,16 @@
+# must be ended with a new line "LF" (Unix) and not "CRLF" (Windows)
+# * * * * * echo "Hello world" >> /var/log/cron.log 2>&1
+# * * * * * echo "Hello world33 $PATH" >> /var/log/cron.log 2>&1
+# * * * * * echo $PATH &> /var/log/cron.log 
+SHELL=/bin/bash
+PATH=/bin:/usr/bin:/home/bgroves@BUSCHE-CNC.COM/anaconda3/bin/python
+LD_LIBRARY_PATH=/usr/oaodbc81/lib64
+OASDK_ODBC_HOME=/usr/oaodbc81/lib64 
+ODBCINI=/usr/oaodbc81/odbc64.ini 
+* * * * * echo "PATH" &> /var/log/cron.log 
+* * * * * bash -lc cd /home/bgroves@BUSCHE-CNC.COM/srcdocker/ETL-Pod/etl/PipeLine && ./TrialBalance.sh
+5 * * * * /usr/bin/bash -x /path/to/script 2>&1 | tee -a /root/output.cron.txt
+* * * * * cd /home/bgroves@BUSCHE-CNC.COM/srcdocker/ETL-Pod/etl/PipeLine && ./TrialBalance.sh
+* * * * * echo "Hello world22 PATH=$PATH" >> /var/log/cron.log 2>&1
+# * * * * * echo "Testing msmtp from ${HOSTNAME} with mail command" | mail -s "test mail from cron" bgroves@buschegroup.com
+# An empty line is required at the end of this file for a valid cron file.

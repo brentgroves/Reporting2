@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: certificate-authority-config
+data:
+  config-template.json: |
+    {
+      "signing": {
+        "default": {
+          "auth_key": "unused",
+          "expiry": "1h"
+        },
+        "profiles": {
+          "client": {
+              "expiry": "%%%EXPIRY_CLIENT_HOURS%%%h",
+              "usages": [
+                "critical",
+                "digital signature",
+                "key encipherment",
+                "client auth",
+                "signing"
+              ],
+              "auth_key": "client"
+          },
+          "client-server": {
+            "expiry": "%%%EXPIRY_SERVER_HOURS%%%h",
+            "usages": [
+              "critical",
+              "digital signature",
+              "key encipherment",
+              "server auth",
+              "client auth",
+              "signing"
+            ],
+            "auth_key": "client"
+          }
+        }
+      },
+      "auth_keys": {
+        "client": {
+          "type": "standard",
+          "key": "%%%AUTH_KEY%%%"
+        },
+        "unused": {
+          "type": "standard",
+          "key": "%%%RANDOM_KEY%%%"
+        }
+      }
+    }
+  make-config.sh: |
+    #!/bin/bash
+
+    RANDOM_KEY=$(hexdump -n 16 -e "4/4 \"%08X\" 1 \"\n\"" /dev/random);
+
+    # This assumes that this config map is mounted in /scripts folder.
+    cat /scripts/config-template.json |
+    sed "s/%%%AUTH_KEY%%%/${AUTH_KEY}/g" |
+    sed "s/%%%RANDOM_KEY%%%/${RANDOM_KEY}/g" |
+    sed "s/%%%EXPIRY_CLIENT_HOURS%%%/${EXPIRY_CLIENT_HOURS}/g" |
+    sed "s/%%%EXPIRY_SERVER_HOURS%%%/${EXPIRY_SERVER_HOURS}/g" > /config/config.json;

@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mysql-reports31
+  name: mysql-reports31-svc
+spec:
+  selector:
+    app: mysql-reports31
+  type: NodePort  

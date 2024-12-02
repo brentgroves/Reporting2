@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-reports31
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: mysql-reports31
+        imagePullPolicy: Always
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password3
+              name: lastpass
+        - name: TZ
+          value: America/Fort_Wayne

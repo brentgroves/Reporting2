@@ -1,0 +1,26 @@
+https://github.com/cloudflare/cfssl/blob/master/config/testdata/valid_config.json
+
+{
+	"signing": {
+		"profiles": {
+			"CA": {
+				"usages": ["cert sign"],
+				"expiry": "720h"
+			},
+			"email": {
+				"usages": ["s/mime"],
+				"expiry": "720h"
+			}
+		},
+		"default": {
+			"usages": ["digital signature", "email protection"],
+			"expiry": "8000h"
+		}
+	},
+	"auth_key": {
+		"garbage": {
+			"type":"standard",
+			"key":"0123456789ABCDEF0123456789ABCDEF"
+		}
+	}
+}

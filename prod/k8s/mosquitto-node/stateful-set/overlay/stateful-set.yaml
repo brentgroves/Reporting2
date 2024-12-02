@@ -1,0 +1,13 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mosquitto-reports33
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - image: eclipse-mosquitto:2.0.15
+        name: mosquitto-reports33
+

@@ -1,0 +1,16 @@
+# https://github.com/kubernetes/website/issues/30912
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-reports32-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  # an access mode of ReadWriteOnce, which means the volume can be mounted as read-write by a single Node.
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"

@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongobi-svc
+  namespace: mongo
+  labels:
+    app: mongobi
+spec:
+  ports:
+  - port: 3307
+    targetPort: 3307
+  clusterIP: None
+  selector:
+    app: mongobi
+# reports-mongodb-svc   ClusterIP      None         27017/TCP         7d4h

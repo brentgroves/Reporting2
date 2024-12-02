@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %NODE%
+  labels:
+    app: %NODE%
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: %NODE%
+  template:
+    metadata:
+      labels:
+        app: %NODE%
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: %NODE%-cron
+        image: brentgroves/reports-cron:%VER%
+        volumeMounts:
+          - name: %NODE%-volume
+            mountPath: /apps
+      initContainers:            
+      - name: %NODE%-volume-init
+        image: brentgroves/reports-volume-init:%VER%
+        volumeMounts:
+          - name: %NODE%-volume
+            mountPath: /init-data
+        command: ["/bin/sh"]
+        args: ["-c", "cp -R /volume/* /init-data/"]
+      volumes:
+      - name: %NODE%-volume
+        emptyDir: {}
+      - name: db-user-pass
+        secret:
+          secretName: db-user-pass
+          optional: false 
+      restartPolicy: Always  

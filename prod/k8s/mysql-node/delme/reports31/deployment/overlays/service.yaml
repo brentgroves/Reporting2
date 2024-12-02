@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-reports31
+spec:
+  ports:
+  - name: mysql-reports31-port
+    port: 3306
+    targetPort: mysql-reports31
+    nodePort: 30031    
+    protocol: TCP
+  type: NodePort  
+    

@@ -1,0 +1,249 @@
+#
+#   ref https://github.com/tebeka/pythonwise/blob/master/docker-miniconda/Dockerfile
+#
+#   miniconda vers: http://repo.continuum.io/miniconda
+#   sample variations:
+#     Miniconda3-latest-Linux-armv7l.sh
+#     Miniconda3-latest-Linux-x86_64.sh
+#     Miniconda3-py38_4.10.3-Linux-x86_64.sh
+#     Miniconda3-py37_4.10.3-Linux-x86_64.sh
+#
+#   py vers: https://anaconda.org/anaconda/python/files
+#   tf vers: https://anaconda.org/anaconda/tensorflow/files
+#   tf-mkl vers: https://anaconda.org/anaconda/tensorflow-mkl/files
+# https://hub.docker.com/_/ubuntu?tab=tags&page=1&name=20.04
+
+# ARG UBUNTU_VER=18.04
+ARG UBUNTU_VER=22.04
+# ARG CONDA_VER=py39_4.12.0 This was the latest linux version on 09/02/22
+# That was shown on the conda.io website
+# but during the build I saw it was superseded by conda-4.14.0-py39hf3d152e_0
+ARG CONDA_VER=latest
+ARG PY_VER=3.9.13 
+ARG PANDAS_VER=1.4.2
+ARG MYSQL_CONNECTOR_VER=8.0.30
+ARG FLASK_VER=2.1.3
+ARG FLASK_RESTFUL_VER=0.3.9 
+ARG REQUESTS_VER=2.28.1
+ARG REQUESTS_NTLM_VER=1.1.0
+ARG PIP=22.2.2
+ARG ZEEP_VER=4.1.0
+ARG PYODBC_VER=4.0.32 
+ARG SQLALCHEMY_VER=1.4.32
+ARG PYTHON_CRONTAB_VER=2.6.0
+ARG MARSHMALLOW_VER=3.17.0
+
+ARG OS_TYPE=x86_64
+ARG TF_VER=2.5.0
+
+# ARG MYSQL_CONNECTOR_VER=8.0.18 use pip install mysql-connector-python could not get conda version to install
+FROM ubuntu:${UBUNTU_VER}
+# FROM ubuntu:20.04
+
+# git clone git@github.com:brentgroves/docker-timezones.git
+# docker-timezones
+# https://blog.game-changing.de/how-to-set-timezone-and-locale-in-an-ubuntu-image-properly/
+# https://blog.game-changing.de/how-to-set-timezone-and-locale-in-an-ubuntu-image-properly/
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Set the timezone
+ENV TZ=America/Fort_Wayne
+RUN apt-get update \ 
+    && apt-get install -yq tzdata locales \
+    && rm -rf /var/lib/apt/lists/* \    
+    && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen \
+    && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && dpkg-reconfigure tzdata 
+
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+RUN apt-get update && apt-get install -yq \
+  ksh \
+  # I don't why I need these packages so I took them out
+  # apt-utils \
+  # apt-transport-https 
+  # ca-certificates 
+  neofetch 
+RUN apt-get install -yq \
+  software-properties-common \
+  curl \
+  wget 
+
+RUN apt-get install -yq \
+  dnsutils \
+  iputils-ping \
+  netcat 
+
+RUN apt-get install -yq \
+  tree \
+  curl \
+  vim \
+  jq 
+
+RUN apt-get install -yq \
+  msmtp \
+  msmtp-mta \
+  mailutils \ 
+  bsd-mailx
+
+RUN apt-get install -yq \
+  cron \
+  && rm -rf /var/lib/apt/lists/*
+
+# https://www.freecodecamp.org/news/docker-cache-tutorial/
+# docker build -t my-custom-nginx --build-arg CACHEBUST=$(date +%s) .
+# Custom cache invalidation
+# ARG CACHEBUST=1
+
+# Configure mail utility
+WORKDIR /app/install/mail
+COPY ./install/mail/msmtprc /etc/msmtprc
+COPY ./install/mail/mail.rc /etc/mail.rc
+COPY ./install/mail/aliases /etc/aliases
+
+# Add microsoft repo 
+RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update
+
+# Install Microsoft odbc utilities for Busche-sql which requires the older driver.
+RUN DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get install -y msodbcsql17
+RUN DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get install -y mssql-tools
+RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+
+# Install Microsoft odbc utilities for Azure SQL which requires the older driver.
+RUN DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get install -y msodbcsql18
+RUN DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get install -y mssql-tools18
+RUN echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y unixodbc-dev
+
+# Use the above args during building https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
+ARG CONDA_VER
+ARG OS_TYPE
+# Install miniconda to /miniconda
+RUN curl -LO "http://repo.continuum.io/miniconda/Miniconda3-${CONDA_VER}-Linux-${OS_TYPE}.sh"
+RUN bash Miniconda3-${CONDA_VER}-Linux-${OS_TYPE}.sh -p /miniconda -b
+RUN rm Miniconda3-${CONDA_VER}-Linux-${OS_TYPE}.sh
+ENV PATH=/miniconda/bin:${PATH}
+RUN conda update -y conda
+
+ARG PY_VER
+ARG ZEEP_VER
+ARG PYODBC_VER 
+ARG PANDAS_VER
+ARG SQLALCHEMY_VER
+ARG MYSQL_CONNECTOR_VER
+
+# Install packages from anaconda.
+# RUN conda install -c anaconda -y python=3.9.13
+RUN conda install -c anaconda -y python=${PY_VER}
+RUN conda install -c anaconda -y \
+    pyodbc=${PYODBC_VER} \ 
+    sqlalchemy=${SQLALCHEMY_VER} \
+    flask=${FLASK_VER} \ 
+    requests=${REQUESTS_VER} 
+
+# Install packages from conda-forge
+RUN conda install -c conda-forge -y \
+    mysql-connector-python=${MYSQL_CONNECTOR_VER}
+
+RUN conda install -c conda-forge -y \
+    pandas=${PANDAS_VER}
+
+RUN conda install -c conda-forge -y \
+    zeep=${ZEEP_VER} \
+    flask-restful=${FLASK_RESTFUL_VER} \ 
+    requests_ntlm=${REQUESTS_NTLM_VER} \
+    python-crontab=${PYTHON_CRONTAB_VER} \ 
+    marshmallow=${MARSHMALLOW_VER}
+
+# Install Plex ODBC driver
+WORKDIR /app/install/odbc
+COPY ./install/odbc/PROGRESS_DATADIRECT_OPENACCESS_OAODBC_8.1.0.HOTFIX_LINUX_64.tar .
+RUN tar -xf PROGRESS_DATADIRECT_OPENACCESS_OAODBC_8.1.0.HOTFIX_LINUX_64.tar
+COPY ./install/odbc/PlexDriverInstall.py ./
+RUN python PlexDriverInstall.py 
+COPY ./install/odbc/odbc.ini /etc/
+COPY ./install/odbc/odbc64.ini /usr/oaodbc81/
+ENV LD_LIBRARY_PATH="/usr/oaodbc81/lib64"
+ENV OASDK_ODBC_HOME="/usr/oaodbc81/lib64"
+ENV ODBCINI="/usr/oaodbc81/odbc64.ini"
+
+# https://www.freecodecamp.org/news/docker-cache-tutorial/
+# docker build -t my-custom-nginx --build-arg CACHEBUST=$(date +%s) .
+# Custom cache invalidation
+ARG CACHEBUST=1
+
+# Install cron jobs
+
+COPY ./install/cron/etl-crontab /etc/cron.d/etl-crontab
+# cp /etc/cron.d/trial-balance-crontab /var/spool/cron/crontabs/root
+# https://www.howtogeek.com/devops/how-to-use-cron-with-your-docker-containers/
+# COPY ./install/cron/trial-balance-crontab /var/spool/cron/crontabs/root
+RUN chmod 0644 /etc/cron.d/etl-crontab && crontab /etc/cron.d/etl-crontab
+
+WORKDIR /app/validation
+COPY ./validation/*.py ./
+COPY ./validation/*.wsdl ./
+
+
+WORKDIR /app/etl/PipeLine
+COPY ./etl/PipeLine .
+
+WORKDIR /app/etl/wsdl
+COPY ./etl/wsdl .
+
+
+WORKDIR /app/etl/AccountingYearCategoryType
+COPY ./etl/AccountingYearCategoryType .
+
+WORKDIR /app/etl/AccountingAccount
+COPY ./etl/AccountingAccount .
+
+WORKDIR /app/etl/AccountingPeriod
+COPY ./etl/AccountingPeriod .
+
+WORKDIR /app/etl/AccountingPeriodRanges
+COPY ./etl/AccountingPeriodRanges .
+
+WORKDIR /app/etl/AccountingStartPeriodUpdate
+COPY ./etl/AccountingStartPeriodUpdate .
+
+WORKDIR /app/etl/AccountingBalanceAppendPeriodRange
+COPY ./etl/AccountingBalanceAppendPeriodRange .
+
+WORKDIR /app/etl/AccountActivitySummaryGetOpenPeriodRange
+COPY ./etl/AccountActivitySummaryGetOpenPeriodRange .
+
+WORKDIR /app/etl/AccountPeriodBalanceRecreatePeriodRange
+COPY ./etl/AccountPeriodBalanceRecreatePeriodRange .
+
+WORKDIR /app/etl/AccountPeriodBalanceRecreateOpenPeriodRange
+COPY ./etl/AccountPeriodBalanceRecreateOpenPeriodRange .
+
+WORKDIR /app/etl/DailyShiftReportGet
+COPY ./etl/DailyShiftReportGet .
+
+WORKDIR /app/etl/misc
+COPY ./etl/misc .
+
+WORKDIR /app/api
+COPY ./dev/api/app.py .
+
+EXPOSE 5000
+# https://www.bmc.com/blogs/docker-cmd-vs-entrypoint/
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000" ]
+
+# So docker never exits for debug only
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+# Start the main program.
+# https://www.howtogeek.com/devops/how-to-use-cron-with-your-docker-containers/
+# ENTRYPOINT ["cron", "-f"] 
+
+# Debug Only
+# docker run -d brentgroves/
+# docker exec -it 9092193339 /bin/sh

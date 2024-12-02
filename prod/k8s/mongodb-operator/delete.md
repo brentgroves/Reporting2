@@ -1,0 +1,1 @@
+https://stackoverflow.com/questions/70479256/mongodb-cluster-kubernetes-stateful-set-is-not-deleting

@@ -1,0 +1,89 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: %SERVICE_NAME%
+  #namespace: default
+  labels:
+    app: %APP%
+spec:
+  ports:
+  # port=available to other containers
+  - port: 5000
+    name: http
+    # targetPort=exposed from inside container
+    targetPort: 5000
+    protocol: TCP
+  selector:
+    app: %APP%
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: %APP%
+  labels:
+    app: %APP%
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: %APP%
+  template:
+    metadata:
+      labels:
+        app: %APP%
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: %APP%
+        image: brentgroves/%APP%:%VER%
+        imagePullPolicy: Always        
+        resources:
+          limits:
+            cpu: "0.3"
+            memory: "512Mi"
+          requests:
+            cpu: "0.3"
+            memory: "256Mi"
+        env:
+        # which database to use
+        - name: MYSQL_HOST
+          value: "reports13"
+        - name: MYSQL_IP
+          value: "10.1.0.113"
+        - name: MYSQL_PORT
+          value: "31008"
+        - name: AZURE_DW
+          value: "0"
+        # command: ["/bin/sh"]
+        # args:
+        #   - -c
+        #   - >-
+        #       flask run --host=0.0.0.0 --port=5000 
+        # command: ["/bin/sleep", "3650d"]
+        # imagePullPolicy: Always
+        volumeMounts:
+        - name: foo
+          mountPath: "/etc/foo"
+          readOnly: true
+      # affinity:               
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       - matchExpressions:
+      #         - key: kubernetes.io/hostname
+      #           operator: In
+      #           values:
+      #           # - avi-ubu.busche-cnc.com
+      #           - moto.busche-cnc.com
+      #           # - frt-ubu.busche-cnc.com  
+      volumes:
+      - name: foo
+        secret:
+          secretName: db-user-pass
+          optional: false # default setting; "mysecret" must exist    
+        # imagePullPolicy: IfNotPresent
+      restartPolicy: Always  

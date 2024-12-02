@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etl-reports11 
+  #namespace: default
+spec:
+  ports:
+  # port=available to other containers
+  - port: 5000
+    name: http
+    # targetPort=exposed from inside container
+    targetPort: 5000
+    protocol: TCP
+    

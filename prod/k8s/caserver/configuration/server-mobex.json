@@ -1,0 +1,21 @@
+{
+  "CN": "reports51",
+  "hosts": [
+    "172.20.88.65",
+    "reports51"
+  ],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+      {
+        "C": "US",
+        "L": "Avilla",
+        "O": "Mobex Global",
+        "ST": "Indiana",
+        "OU": "MIS department"
+      }
+  ]
+}
+

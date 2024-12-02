@@ -1,0 +1,87 @@
+---
+# https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
+apiVersion: v1
+kind: Service
+metadata:
+  name: reporting-api-service
+  #namespace: default
+  labels:
+    app: reporting-api
+spec:
+  ports:
+  # port=available to other containers
+  - port: 5000
+    name: http
+    # targetPort=exposed from inside container
+    targetPort: 5000
+    protocol: TCP
+  selector:
+    app: reporting-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reporting-api 
+  name: reporting-api 
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: reporting-api
+  template:
+    metadata:
+      labels:
+        app: reporting-api
+    spec:
+# https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      containers:
+      - image: brentgroves/api1:1 
+        volumeMounts:
+        - name: shared-data
+          mountPath: /app/output
+        name: reporting-api
+        imagePullPolicy: Always        
+        resources:
+          limits:
+            cpu: "0.3"
+            memory: "512Mi"
+          requests:
+            cpu: "0.3"
+            memory: "256Mi"
+        env:
+          - name: FLASK_APP
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: FLASK_APP
+          - name: MYSQL_ROOT_USER
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_USER
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_PASSWORD
+          - name: MYSQL_ROOT_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_HOST
+          - name: MYSQL_ROOT_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_PORT
+          - name: MYSQL_ROOT_DB
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_DB

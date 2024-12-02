@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+data:
+  ca.endpoint: "certificate-authority:8080"
+  ca.clientCert.expiryHours: "120" # 5 Days
+  ca.serverCert.expiryHours: "120" # 5 Days

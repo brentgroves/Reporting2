@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: mongo
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+        selector: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:4.0.17
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 27017
+          name: mongo-port
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo-store
+
+      #   env:
+      #   - name: MONGO_INITDB_ROOT_USERNAME
+      #     valueFrom:
+      #       secretKeyRef:
+      #         key: username10
+      #         name: lastpass
+      #   - name: MONGO_INITDB_ROOT_PASSWORD
+      #     valueFrom:
+      #       secretKeyRef:
+      #         key: password10
+      #         name: lastpass
+      # terminationGracePeriodSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: mongo-store
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: mayastor-3

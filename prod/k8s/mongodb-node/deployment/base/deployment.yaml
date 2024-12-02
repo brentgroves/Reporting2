@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mongodb-reports31
+  name: mongodb-reports31
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-reports31
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mongodb-reports31
+    spec:
+      containers:
+      - image: mongo:6.0.3
+        name: mongodb-reports31
+        ports:
+        - containerPort: 27017
+          name: reports31-mongo
+          protocol: TCP
+        args:
+        - -c
+        - mongod --bind_ip_all --dbpath /data/db
+        command:
+        - /bin/sh
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: password
+        volumeMounts:
+        - name: mongodb-reports31-data-dir
+          mountPath: "/data/db"
+      volumes:
+      - name: mongodb-reports31-data-dir
+        persistentVolumeClaim:
+          claimName: mongodb-reports31-pvc

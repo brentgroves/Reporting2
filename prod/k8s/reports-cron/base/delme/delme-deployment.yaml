@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports31
+  labels:
+    app: reports31
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: reports31
+  template:
+    metadata:
+      labels:
+        app: reports31
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: reports31-etl
+        image: brentgroves/reports-etl:1
+        volumeMounts:
+          - name: reports31-etl
+            mountPath: /app/etl
+          - name: reports31-crontab
+            mountPath: /app/crontab
+      initContainers:            
+      - name: reports31-etl-volume
+        image: brentgroves/reports-etl-volume:1
+        volumeMounts:
+          - name: reports31-etl
+            mountPath: /init-data
+        command: ["/bin/sh"]
+        args: ["-c", "cp -R /etl/* /init-data/"]
+      - name: reports31-crontab-volume
+        image: brentgroves/reports-crontab-volume:1
+        volumeMounts:
+          - name: reports31-crontab
+            mountPath: /init-data
+        command: ["/bin/sh"]
+        args: ["-c", "cp -R /crontab/* /init-data/"]
+      volumes:
+      - name: reports31-etl
+        emptyDir: {}
+      - name: reports31-crontab
+        emptyDir: {}
+      - name: foo
+        secret:
+          secretName: db-user-pass
+          optional: false # default setting; "mysecret" must exist    
+        # imagePullPolicy: IfNotPresent
+      restartPolicy: Always  

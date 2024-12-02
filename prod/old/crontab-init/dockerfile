@@ -1,0 +1,46 @@
+# ARG UBUNTU_VER=18.04
+ARG UBUNTU_VER=22.04
+
+# ARG MYSQL_CONNECTOR_VER=8.0.18 use pip install mysql-connector-python could not get conda version to install
+FROM ubuntu:${UBUNTU_VER}
+# FROM ubuntu:20.04
+
+RUN apt-get update && apt-get install -yq \
+  tree \
+  vim \
+  cron \
+  sed \
+  && rm -rf /var/lib/apt/lists/*
+
+# https://www.freecodecamp.org/news/docker-cache-tutorial/
+# docker build -t my-custom-nginx --build-arg CACHEBUST=$(date +%s) .
+# Custom cache invalidation
+ARG CACHEBUST=1
+
+WORKDIR /crontab
+COPY ./install/cron/* /crontab/
+# COPY ./install/cron/${NODE} /etc/cron.d/etl-crontab
+# https://www.howtogeek.com/devops/how-to-use-cron-with-your-docker-containers/
+# RUN chmod 0644 /crontab/etl-template 
+# RUN chmod 0644 /init/etl && crontab /etc/cron.d/etl
+
+
+
+# Start the main program.
+# https://www.howtogeek.com/devops/how-to-use-cron-with-your-docker-containers/
+# https://www.dev-diaries.com/social-posts/conditional-logic-in-dockerfile/
+# https://www.bmc.com/blogs/docker-cmd-vs-entrypoint/
+
+######EXPOSE 5000
+######CMD ["flask", "run", "--host=0.0.0.0", "--port=5000" ]
+# Start the main program.
+# https://www.howtogeek.com/devops/how-to-use-cron-with-your-docker-containers/
+# ENTRYPOINT ["cron", "-f"] 
+
+# So docker never exits for debug only
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+# Debug Only
+# docker run -d brentgroves/
+# docker exec -it 9092193339 /bin/sh
+# flask run --host=0.0.0.0 --port=5000

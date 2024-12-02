@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: %APP%-%NODE%
+  labels:
+    app: %APP%-%NODE%
+spec:
+  serviceName: %APP%-%NODE%-svc
+  selector:
+    matchLabels:
+      app: %APP%-%NODE%
+  template:
+    metadata:
+      labels:
+        app: %APP%-%NODE%
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - %NODE%
+      containers:
+      - name: %APP%-%NODE%
+        image: brentgroves/mysql:%VER%
+        ports:
+        - name: %NODE%-%TARGET_PORT_NAME%
+          containerPort: %TARGET_PORT%
+          protocol: TCP
+        volumeMounts:
+        - name: %APP%-%NODE%-data-dir
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: %APP%-%NODE%-data-dir
+        persistentVolumeClaim:
+          claimName: %APP%-%NODE%-pvc

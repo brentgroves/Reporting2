@@ -1,0 +1,18 @@
+# https://www.mongodb.com/docs/kubernetes-operator/master/tutorial/multi-cluster-connect-from-outside-k8s/
+# https://www.mongodb.com/docs/kubernetes-operator/master/connect/#k8s-connect-resources
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-replica-set-ext-svc
+  labels:
+    app: mongodb-replica-set
+spec:
+  ports:
+  - name: mongodb-replica-set-nodeport
+    nodePort: 30007
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    app: mongodb-replica-set-svc
+  type: NodePort

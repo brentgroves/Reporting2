@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-reports31
+spec:
+  ports:
+  - name: mysql-reports31-port
+    nodePort: 30031
+    port: 3306
+    protocol: TCP
+    targetPort: mysql-reports31-svc
+  selector:
+    app: mysql-reports31
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-reports31
+spec:
+  selector:
+    matchLabels:
+      app: mysql-reports31
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-reports31
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - reports31
+      containers:
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        - name: TZ
+          value: America/Fort_Wayne
+        image: brentgroves/mysql:8.0
+        name: mysql-reports31
+        ports:
+        - containerPort: 3306
+          name: mysql-reports31-svc
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-reports31-persistent-storage
+      volumes:
+      - name: mysql-reports31-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-reports31-pv-claim
