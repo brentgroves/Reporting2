@@ -79,55 +79,30 @@ try:
   tdelta = fetch_time - start_time 
   print_to_stdout(f"fetch_time={tdelta}") 
 
-  if '1'==azure_dw:
-    conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
-    cursor2 = conn2.cursor()
-    # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-    del_command = f"delete from Plex.accounting_period_ranges where pcn in ({pcn_list})"
-    # del_command = f"delete from Scratch.accounting_balance_update_period_range where pcn in ({params})"
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # The return value is always the cursor itself:
-    rowcount=cursor2.execute(del_command).rowcount
-    print_to_stdout(f"{del_command} - rowcount={rowcount}")
-    print_to_stdout(f"{del_command} - messages={cursor2.messages}")
-
-    cursor2.commit()
-
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-    im2='''insert into Plex.accounting_period_ranges (pcn,start_period,end_period,start_open_period,end_open_period,no_update)  
-            values (?,?,?,?,?,0)''' 
-    cursor2.fast_executemany = True
-    cursor2.executemany(im2,rows)
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-    cursor2.commit()
-    cursor2.close()
- 
-  insertObject = []
-  # columnNames = [column[0] for column in cursor.description]
-  for record in rows:
-      insertObject.append(tuple(record))
-
-  conn3 = mysql.connector.connect(user=username3, password=password3,
-                          host=mysql_host,
-                          port=mysql_port,
-                          database='Plex')
-  cursor3 = conn3.cursor()
+  conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
+  cursor2 = conn2.cursor()
   # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
   del_command = f"delete from Plex.accounting_period_ranges where pcn in ({pcn_list})"
-  cursor3.execute(del_command)
-  # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-  print_to_stdout(f"{del_command} - rowcount={cursor3.rowcount}")
-  # print_to_stdout(f"{txt} - messages={cursor2.messages}")
-  conn3.commit()
-  im2='''insert into Plex.accounting_period_ranges (pcn,start_period,end_period,start_open_period,end_open_period,no_update)  
-          values (%s,%s,%s,%s,%s,0)''' 
-  cursor3.executemany(im2,insertObject)
-  # cursor2.executemany(im2,records_to_insert)
-  conn3.commit()
-  cursor3.close()
+  # del_command = f"delete from Scratch.accounting_balance_update_period_range where pcn in ({params})"
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # The return value is always the cursor itself:
+  rowcount=cursor2.execute(del_command).rowcount
+  print_to_stdout(f"{del_command} - rowcount={rowcount}")
+  print_to_stdout(f"{del_command} - messages={cursor2.messages}")
 
+  cursor2.commit()
+
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
+  # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+  im2='''insert into Plex.accounting_period_ranges (pcn,start_period,end_period,start_open_period,end_open_period,no_update)  
+          values (?,?,?,?,?,0)''' 
+  cursor2.fast_executemany = True
+  cursor2.executemany(im2,rows)
+  # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+  cursor2.commit()
+  cursor2.close()
+ 
 except pyodbc.Error as ex:
   ret = 1
   error_msg = ex.args[1]
@@ -150,7 +125,4 @@ finally:
       conn.close()
   if 'conn2' in globals():
       conn2.close()
-  if 'conn3' in globals():
-      if conn3.is_connected():
-          conn3.close()
   sys.exit(ret)

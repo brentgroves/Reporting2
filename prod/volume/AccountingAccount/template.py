@@ -88,88 +88,31 @@ try:
   # https://dev.mysql.com/doc/connector-python/en/connector-python-introduction.html
   # elf-contained driver. Connector/Python does not require the MySQL client library or any Python modules outside the standard library.
   # https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html
-  if '1'==azure_dw:
-    conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
-    cursor2 = conn2.cursor()
-        # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-        # txt = "delete from Plex.accounting_account where pcn in ({dellist:s})"
-    txt = "delete from Plex.accounting_account where pcn in ({dellist:s})"
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # The return value is always the cursor itself:
-    rowcount=cursor2.execute(txt.format(dellist = pcn_list)).rowcount
-    print_to_stdout(f"{txt} - rowcount={rowcount}")
-    print_to_stdout(f"{txt} - messages={cursor2.messages}")
-        
-    cursor2.commit()
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-    # im2='''insert into Plex.accounting_account
-    # values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''' 
-    im2='''insert into Plex.accounting_account
-    values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''' 
-    # rec = [(123681,629753,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604)]
-    cursor2.fast_executemany = True
-    cursor2.executemany(im2,rows)
-    cursor2.commit()
-    cursor2.close()
-
-  insertObject = []
-    # columnNames = [column[0] for column in cursor.description]
-  for record in rows:
-    insertObject.append(tuple(record))
-
-    # conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
-
-  conn3 = mysql.connector.connect(user=username3, password=password3,
-                            host=mysql_host,
-                            port=mysql_port,
-                            database='Plex')
-    # conn3 = mysql.connector.connect(user='root', password='password',
-    #                           host='10.1.0.116',
-    #                           port='31008',
-    #                           database='mcpdw')
-
-  cursor3 = conn3.cursor()
-    # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-    # txt = "delete from Plex.accounting_account where pcn in ({dellist:s})"
+  conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
+  cursor2 = conn2.cursor()
+      # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
+      # txt = "delete from Plex.accounting_account where pcn in ({dellist:s})"
   txt = "delete from Plex.accounting_account where pcn in ({dellist:s})"
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # The return value is always the cursor itself:
-  cursor3.execute(txt.format(dellist = pcn_list))
-   # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-  print_to_stdout(f"{txt} - rowcount={cursor3.rowcount}")
-    # print_to_stdout(f"{txt} - messages={cursor2.messages}")
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # The return value is always the cursor itself:
+  rowcount=cursor2.execute(txt.format(dellist = pcn_list)).rowcount
+  print_to_stdout(f"{txt} - rowcount={rowcount}")
+  print_to_stdout(f"{txt} - messages={cursor2.messages}")
+      
+  cursor2.commit()
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
+  # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+  # im2='''insert into Plex.accounting_account
+  # values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''' 
+  im2='''insert into Plex.accounting_account
+  values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''' 
+  # rec = [(123681,629753,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604)]
+  cursor2.fast_executemany = True
+  cursor2.executemany(im2,rows)
+  cursor2.commit()
+  cursor2.close()
 
-  conn3.commit()
-
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-    # im2='''insert into test.accounting_account
-    # values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''' 
-    # mySql_insert_query = """INSERT INTO Laptop (Id, Name, Price, Purchase_date) 
-    #                        VALUES (%s, %s, %s, %s) """
-  im2 = """INSERT INTO Plex.accounting_account VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
-    # im2 = """INSERT INTO test.accounting_account VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
-
-    # rec = [(123681,629753,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604)]
-    # cursor2.fast_executemany = True
-
-    # records_to_insert = [(123681,629753,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604),
-    #                     (123681,629754,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604),
-    #                     (123681,629755,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604)]
-
-  cursor3.executemany(im2,insertObject)
-    # cursor2.executemany(im2,records_to_insert)
-  conn3.commit()
-  cursor3.close()
-
-    # cursor2.executemany(im2,insertObject)
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-# Error while connecting to MySQL Failed executing the operation; Could not process parameters: 
-# Row((123681, 629753, '10000-000-00000', 'Cash - Comerica General', 0, 'Asset', 0, '', '', 0, '', '', 0, 201604)), 
-# it must be of type list, tuple or dict
 except pyodbc.Error as ex:
   ret = 1
   error_msg = ex.args[1]
@@ -191,8 +134,4 @@ finally:
         conn.close()
     if 'conn2' in globals():
         conn2.close()
-    if 'conn3' in globals():
-        if conn3.is_connected():
-            conn3.close()
-            # print("MySQL connection is closed")
     sys.exit(ret)

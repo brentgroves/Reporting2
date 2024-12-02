@@ -25,7 +25,7 @@ cd ~/src/Reporting2/prod/volume/AccountingYearCategoryType
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountingYearCategoryType.py
 
 cd ~/src/Reporting2/prod/volume/AccountingAccount
-./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountAccount.py
+./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountingAccount.py
 
 cd ~/src/Reporting2/prod/volume/AccountingPeriod
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountingPeriod.py

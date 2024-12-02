@@ -31,29 +31,29 @@ def print_to_stderr(*a):
     
 try:
   ret = 0
-%PROD%pcn = (sys.argv[1])
-%PROD%username = (sys.argv[2])
-%PROD%password = (sys.argv[3])
-%PROD%username2 = (sys.argv[4])
-%PROD%password2 = (sys.argv[5])
-%PROD%username3 = (sys.argv[6])
-%PROD%password3 = (sys.argv[7])
-%PROD%mysql_host = (sys.argv[8])
-%PROD%mysql_port = (sys.argv[9])
-%PROD%azure_dw = (sys.argv[10])
+#%PROD%pcn = (sys.argv[1])
+#%PROD%username = (sys.argv[2])
+#%PROD%password = (sys.argv[3])
+#%PROD%username2 = (sys.argv[4])
+#%PROD%password2 = (sys.argv[5])
+#%PROD%username3 = (sys.argv[6])
+#%PROD%password3 = (sys.argv[7])
+#%PROD%mysql_host = (sys.argv[8])
+#%PROD%mysql_port = (sys.argv[9])
+#%PROD%azure_dw = (sys.argv[10])
 
     # pcn = '300758'
-%DEV%pcn = '123681'
-%DEV%username = 'mg.odbcalbion'
-%DEV%password = 'Mob3xalbion'
-%DEV%username2 = 'mgadmin'
-%DEV%password2 = 'WeDontSharePasswords1!'
-%DEV%username3 = 'root'
-%DEV%password3 = 'password'   
-%DEV%mysql_host = '%MYSQL_HOST%'
+  pcn = '123681'
+  username = 'mg.odbcalbion'
+  password = 'Mob3xalbion'
+  username2 = 'mgadmin'
+  password2 = 'WeDontSharePasswords1!'
+  username3 = 'root'
+  password3 = 'password'   
+  mysql_host = 'reports31'
     # # mysql_host = 'reports13'
-%DEV%mysql_port = '%MYSQL_PORT%'
-%DEV%azure_dw = '%AZURE_DW%'
+  mysql_port = '30031'
+  azure_dw = '1'
 
     # https://geekflare.com/calculate-time-difference-in-python/
   start_time = datetime.now()
@@ -92,6 +92,8 @@ try:
     # end_open_period = result_args[4] #param 5
   # no_update = rows #param 6
 
+
+      # https://docs.microsoft.com/en-us/sql/connect/python/pyodbc/step-1-configure-development-environment-for-pyodbc-python-development?view=sql-server-ver15
   # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
   
@@ -106,6 +108,7 @@ try:
   tdelta = fetch_time - start_time 
   print_to_stdout(f"fetch_time={tdelta}") 
 
+    # if '1'==azure_dw:
   conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
   cursor2 = conn2.cursor()
 
@@ -139,6 +142,7 @@ try:
   cursor2.executemany(im2,rows)
   cursor2.commit()
   cursor2.close()
+
 
     # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
 except pyodbc.Error as ex:

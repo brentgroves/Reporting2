@@ -133,7 +133,6 @@ try:
 
   cursor2.close()
 
-
 except pyodbc.Error as ex:
   ret = 1
   error_msg = ex.args[1]
@@ -151,5 +150,4 @@ finally:
     conn.close()
   if 'conn2' in globals():
     conn2.close()
-      # print("MySQL connection is closed")
   sys.exit(ret)

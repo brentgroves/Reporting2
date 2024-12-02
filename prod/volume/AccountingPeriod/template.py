@@ -100,87 +100,44 @@ try:
             # print(f"i={i},st={st},et={et}")
     i += 1
 
-  if '1'==azure_dw:
-    conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
+  conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
 
-    cursor2 = conn2.cursor()
-        # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-        # delete the previous runs values
-    del_command = f"delete from Plex.accounting_period where pcn in ({pcn_list}) and ordinal = 0"
-        # del_command = f"delete from Scratch.accounting_period where pcn in ({params})"
-
-        # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-        # The return value is always the cursor itself:
-    rowcount=cursor2.execute(del_command).rowcount
-    print_to_stdout(f"{del_command} - rowcount={rowcount}")
-    print_to_stdout(f"{del_command} - messages={cursor2.messages}")
-    cursor2.commit()
-
-        # set the newest records to the previous records.
-    update_command = f"update Plex.accounting_period set ordinal=0 where pcn in ({pcn_list}) and ordinal = 1"
-    rowcount=cursor2.execute(update_command).rowcount
-    print_to_stdout(f"{update_command} - rowcount={rowcount}")
-    print_to_stdout(f"{update_command} - messages={cursor2.messages}")
-    cursor2.commit()
-
-
-        # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-        # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-        # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-        # insert records from Plex with ordinal = 1
-    im2='''insert into Plex.accounting_period (pcn,period_key,period,period_display,fiscal_order,quarter_group,begin_date,end_date,period_status,add_date,update_date,ordinal) 
-            values (?,?,?,?,?,?,?,?,?,?,?,1)''' 
-        # im2='''insert into Scratch.accounting_period (pcn,period_key,period,period_display,fiscal_order,quarter_group,begin_date,end_date,period_status,add_date,update_date) 
-        #         values (?,?,?,?,?,?,?,?,?,?,?)''' 
-
-            #    2022-05-10 00:07:21.000
-    cursor2.fast_executemany = True
-    cursor2.executemany(im2,rows)
-        # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-    cursor2.commit()
-    cursor2.close()
-
-
-  insertObject = []
-    # columnNames = [column[0] for column in cursor.description]
-  for record in rows:
-    insertObject.append(tuple(record))
-
-  conn3 = mysql.connector.connect(user=username3, password=password3,
-                              host=mysql_host,
-                              port=mysql_port,
-                              database='Plex')
-
-  cursor3 = conn3.cursor()
-    # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-    # txt = "delete from Plex.accounting_account where pcn in ({dellist:s})"
-    # delete the previous runs values
+  cursor2 = conn2.cursor()
+      # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
+      # delete the previous runs values
   del_command = f"delete from Plex.accounting_period where pcn in ({pcn_list}) and ordinal = 0"
+      # del_command = f"delete from Scratch.accounting_period where pcn in ({params})"
 
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # The return value is always the cursor itself:
-  cursor3.execute(del_command)
-    # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-  print_to_stdout(f"{del_command} - rowcount={cursor3.rowcount}")
-    # print_to_stdout(f"{txt} - messages={cursor2.messages}")
-  conn3.commit()
+      # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+      # The return value is always the cursor itself:
+  rowcount=cursor2.execute(del_command).rowcount
+  print_to_stdout(f"{del_command} - rowcount={rowcount}")
+  print_to_stdout(f"{del_command} - messages={cursor2.messages}")
+  cursor2.commit()
 
-    # set the newest records to the previous records.
+      # set the newest records to the previous records.
   update_command = f"update Plex.accounting_period set ordinal=0 where pcn in ({pcn_list}) and ordinal = 1"
-  cursor3.execute(update_command)
-    # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-  print_to_stdout(f"{update_command} - rowcount={cursor3.rowcount}")
-    # print_to_stdout(f"{txt} - messages={cursor2.messages}")
-  conn3.commit()
+  rowcount=cursor2.execute(update_command).rowcount
+  print_to_stdout(f"{update_command} - rowcount={rowcount}")
+  print_to_stdout(f"{update_command} - messages={cursor2.messages}")
+  cursor2.commit()
 
 
+      # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+      # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
+      # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+      # insert records from Plex with ordinal = 1
   im2='''insert into Plex.accounting_period (pcn,period_key,period,period_display,fiscal_order,quarter_group,begin_date,end_date,period_status,add_date,update_date,ordinal) 
-        values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1)''' 
-   
-  cursor3.executemany(im2,insertObject)
-    # cursor2.executemany(im2,records_to_insert)
-  conn3.commit()
-  cursor3.close()
+          values (?,?,?,?,?,?,?,?,?,?,?,1)''' 
+      # im2='''insert into Scratch.accounting_period (pcn,period_key,period,period_display,fiscal_order,quarter_group,begin_date,end_date,period_status,add_date,update_date) 
+      #         values (?,?,?,?,?,?,?,?,?,?,?)''' 
+
+          #    2022-05-10 00:07:21.000
+  cursor2.fast_executemany = True
+  cursor2.executemany(im2,rows)
+      # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+  cursor2.commit()
+  cursor2.close()
 
 except pyodbc.Error as ex:
   ret = 1
@@ -204,8 +161,4 @@ finally:
     conn.close()
   if 'conn2' in globals():
     conn2.close()
-  if 'conn3' in globals():
-    if conn3.is_connected():
-      conn3.close()
-            # print("MySQL connection is closed")
   sys.exit(ret)
