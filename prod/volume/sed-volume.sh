@@ -16,44 +16,44 @@ printf "\nsed_volume mongo_host: $mongo_host"
 printf "\nsed_volume mongo_port: $mongo_port" 
 printf "\nsed_volume mongo_db: $mongo_db" 
 
-cd ~/src/Reporting/prod/volume/misc
+cd ~/src/Reporting2/prod/volume/misc
 ./sed-script-start-py.sh $build $mysql_host $mysql_port $azure_dw script-start.py
-cd ~/src/Reporting/prod/volume/misc
+cd ~/src/Reporting2/prod/volume/misc
 ./sed-script-end-py.sh $build $mysql_host $mysql_port $azure_dw script-end.py
 
-cd ~/src/Reporting/prod/volume/AccountingYearCategoryType
+cd ~/src/Reporting2/prod/volume/AccountingYearCategoryType
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountingYearCategoryType.py
 
-cd ~/src/Reporting/prod/volume/AccountingAccount
+cd ~/src/Reporting2/prod/volume/AccountingAccount
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountAccount.py
 
-cd ~/src/Reporting/prod/volume/AccountingPeriod
+cd ~/src/Reporting2/prod/volume/AccountingPeriod
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountingPeriod.py
 
-cd ~/src/Reporting/prod/volume/AccountingPeriodRanges
+cd ~/src/Reporting2/prod/volume/AccountingPeriodRanges
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountingPeriodRanges.py
 
-cd ~/src/Reporting/prod/volume/AccountingStartPeriodUpdate
+cd ~/src/Reporting2/prod/volume/AccountingStartPeriodUpdate
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountingStartPeriodUpdate.py
 
-cd ~/src/Reporting/prod/volume/AccountingBalanceAppendPeriodRange
+cd ~/src/Reporting2/prod/volume/AccountingBalanceAppendPeriodRange
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountingBalanceAppendPeriodRange.py
 
-cd ~/src/Reporting/prod/volume/AccountActivitySummaryGetOpenPeriodRange
+cd ~/src/Reporting2/prod/volume/AccountActivitySummaryGetOpenPeriodRange
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountActivitySummaryGetOpenPeriodRange.py
 
-cd ~/src/Reporting/prod/volume/AccountPeriodBalanceRecreatePeriodRange
+cd ~/src/Reporting2/prod/volume/AccountPeriodBalanceRecreatePeriodRange
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountPeriodBalanceRecreatePeriodRange.py
 
-cd ~/src/Reporting/prod/volume/AccountPeriodBalanceRecreateOpenPeriodRange
+cd ~/src/Reporting2/prod/volume/AccountPeriodBalanceRecreateOpenPeriodRange
 ./sed-change-build-py.sh $build $mysql_host $mysql_port $azure_dw AccountPeriodBalanceRecreateOpenPeriodRange.py
 
 
-# cd ~/src/Reporting/prod/volume/AccountPeriodBalanceToMongoDB
+# cd ~/src/Reporting2/prod/volume/AccountPeriodBalanceToMongoDB
 # ./sed-change-build-py.sh $build $mysql_host $mysql_port $mongo_host $mongo_port $mongo_db AccountPeriodBalanceToMongoDB.py
 
 
-# cd ~/src/Reporting/prod/volume/CronTab
+# cd ~/src/Reporting2/prod/volume/CronTab
 # ./sed-CronTabUpdate.sh $build $mysql_host $mysql_port 
 # ./sed-crontab-base.sh $build $mysql_host $mysql_port $azure_dw
 # cd ../modules

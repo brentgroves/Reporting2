@@ -92,92 +92,47 @@ try:
   next_year = todays_date.year + 1
 
 
-  if '1'==azure_dw:
-    conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
+  conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
 
-    cursor2 = conn2.cursor()
-    del_command = f'''delete from Plex.accounting_account_year_category_type 
-    where year between {this_year} and {next_year} 
-    and pcn in ({pcn_list})'''
-    # del_command = f"delete from Plex.accounting_account_year_category_type where [year] = {todays_date.year} and pcn in ({params})"
-    # del_command = f"delete from Scratch.accounting_account_year_category_type where [year] = {todays_date.year} and pcn in ({params})"
-    # print_to_stdout(del_command)
-
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # The return value is always the cursor itself:
-    rowcount=cursor2.execute(del_command).rowcount
-    # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-    print_to_stdout(f"{del_command} - rowcount={rowcount}")
-    print_to_stdout(f"{del_command} - messages={cursor2.messages}")
-    cursor2.commit()
-
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-    im2=f'''insert into Plex.accounting_account_year_category_type (pcn,account_no,[year],category_type,revenue_or_expense) 
-    values (?,?,{this_year},?,?)''' 
-
-    # rec = [(123681,629753,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604)]
-    cursor2.fast_executemany = True
-    cursor2.executemany(im2,insertObject)
-    # cursor2.executemany(im2,rows)
-    cursor2.commit()
-
-    im2=f'''insert into Plex.accounting_account_year_category_type (pcn,account_no,[year],category_type,revenue_or_expense) 
-    values (?,?,{next_year},?,?)''' 
-
-    # rec = [(123681,629753,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604)]
-    cursor2.fast_executemany = True
-    cursor2.executemany(im2,insertObject)
-    cursor2.commit()
-
-
-    cursor2.close()
-
-# https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-
-  conn3 = mysql.connector.connect(user=username3, password=password3,
-                            host=mysql_host,
-                            port=mysql_port,
-                            database='Plex')
-
-  cursor3 = conn3.cursor()
-  # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-  # txt = "delete from Plex.accounting_account where pcn in ({dellist:s})"
-  # del_command = f"delete from Plex.accounting_account_year_category_type where year = {todays_date.year} and pcn in ({params})"
-
+  cursor2 = conn2.cursor()
   del_command = f'''delete from Plex.accounting_account_year_category_type 
   where year between {this_year} and {next_year} 
   and pcn in ({pcn_list})'''
+  # del_command = f"delete from Plex.accounting_account_year_category_type where [year] = {todays_date.year} and pcn in ({params})"
+  # del_command = f"delete from Scratch.accounting_account_year_category_type where [year] = {todays_date.year} and pcn in ({params})"
+  # print_to_stdout(del_command)
 
-
-  # txt = "delete from Plex.accounting_account where pcn in ({dellist:s})"
   # https://github.com/mkleehammer/pyodbc/wiki/Cursor
   # The return value is always the cursor itself:
-  cursor3.execute(del_command)
+  rowcount=cursor2.execute(del_command).rowcount
   # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-  print_to_stdout(f"{del_command} - rowcount={cursor3.rowcount}")
-  # print_to_stdout(f"{txt} - messages={cursor2.messages}")
-  conn3.commit()
+  print_to_stdout(f"{del_command} - rowcount={rowcount}")
+  print_to_stdout(f"{del_command} - messages={cursor2.messages}")
+  cursor2.commit()
 
-  im2=f'''insert into Plex.accounting_account_year_category_type (pcn,account_no,`year`,category_type,revenue_or_expense)
-  values (%s,%s,{this_year},%s,%s)''' 
-  # im2='''insert into Plex.accounting_account_year_category_type (pcn,account_no,`year`,category_type,revenue_or_expense)
-  # values (%s,%s,%s,%s,%s)''' 
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
+  # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+  im2=f'''insert into Plex.accounting_account_year_category_type (pcn,account_no,[year],category_type,revenue_or_expense) 
+  values (?,?,{this_year},?,?)''' 
 
-  cursor3.executemany(im2,insertObject)
-  # cursor2.executemany(im2,records_to_insert)
-  conn3.commit()
+  # rec = [(123681,629753,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604)]
+  cursor2.fast_executemany = True
+  cursor2.executemany(im2,insertObject)
+  # cursor2.executemany(im2,rows)
+  cursor2.commit()
 
-  im2=f'''insert into Plex.accounting_account_year_category_type (pcn,account_no,`year`,category_type,revenue_or_expense)
-  values (%s,%s,{next_year},%s,%s)''' 
-  # im2='''insert into Plex.accounting_account_year_category_type (pcn,account_no,`year`,category_type,revenue_or_expense)
-  # values (%s,%s,%s,%s,%s)''' 
+  im2=f'''insert into Plex.accounting_account_year_category_type (pcn,account_no,[year],category_type,revenue_or_expense) 
+  values (?,?,{next_year},?,?)''' 
 
-  cursor3.executemany(im2,insertObject)
-  # cursor2.executemany(im2,records_to_insert)
-  conn3.commit()
-  cursor3.close()
+  # rec = [(123681,629753,'10000-000-00000','Cash - Comerica General',0,'Asset',0,'category-name-legacy','cattypeleg',0,'subcategory-name-legacy','subcattleg',0,201604)]
+  cursor2.fast_executemany = True
+  cursor2.executemany(im2,insertObject)
+  cursor2.commit()
+
+
+  cursor2.close()
+
 
 except pyodbc.Error as ex:
   ret = 1
@@ -196,8 +151,5 @@ finally:
     conn.close()
   if 'conn2' in globals():
     conn2.close()
-  if 'conn3' in globals():
-    if conn3.is_connected():
-      conn3.close()
       # print("MySQL connection is closed")
   sys.exit(ret)

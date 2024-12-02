@@ -1,4 +1,10 @@
-# Linamar change notes
+# run tb
+
+## Remove TB dependancy
+
+Did this on Dec 2nd in Reporting2 repo because I was no longer able to ping google.com from the Avilla K8s. I told them I was going to get rid of this cluster and try to recreate one on the linamar vlan.
+
+## Linamar change notes
 
 From Alb-utl1, 10.1.1.1 Download the TRIALBALANCE report from plex and import it into the DW
 Run Power BI report from Alb-utl4.
@@ -71,7 +77,7 @@ TB-202209_to_202309_on_10-10_GP
 
 ```bash
 pushd .. 
-cd ~/src/Reporting/prod/k8s/secrets/lastpass
+cd ~/src/Reporting2/prod/k8s/secrets/lastpass
 ./print-etc-lastpass.sh
 mysql_host=$1
 mysql_port=$2
@@ -92,7 +98,8 @@ ssh to dev system
 ## initailize the scripts for prod or dev
 
 ```bash
-pushd ~/src/Reporting/prod/volume
+pushd . 
+cd ~/src/Reporting2/prod/volume
 mysql_host=$2
 mysql_port=$3
 azure_dw=$4
@@ -110,7 +117,7 @@ mongo_db=$7
 
 ```bash
 pushd .
-cd ~/src/Reporting/prod/volume/PipeLine
+cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
@@ -160,7 +167,7 @@ To use venv in your project, in your terminal, create a new project folder, cd t
 # add env/ folder to gitignore
 conda deactivate
 pushd .
-cd ~/src/Reporting/prod/volume/PipeLine
+cd ~/src/Reporting2/prod/volume/PipeLine
 # python3.8 -m venv env if multiple versions of python are installed using deadsnakes ppa
 python3 -m venv env
 source env/bin/activate
@@ -172,7 +179,7 @@ pip install pyodbc
 
 # If start_period_update = 1 the AccountingStartPeriodUpdate script will run
 
-./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202310" "202410" 0 "once"
+./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202311" "202411" 0 "once"
 ```
 
 ## run dbeaver
