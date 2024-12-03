@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mgdw # name of the StatefulSet workload, the SQL Server instance name is derived from this. We suggest to keep this name same as the .spec.template.metadata.labels, .spec.selector.matchLabels and .spec.serviceName to avoid confusion.
+  namespace: mgdw
+  labels:
+    app: mgdw
+spec:
+  serviceName: "mgdw" # serviceName is the name of the service that governs this StatefulSet. This service must exist before the StatefulSet, and is responsible for the network identity of the set.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mgdw
+  template:
+    metadata:
+      labels:
+        app: mgdw # this has to be the same as .spec.selector.matchLabels, as documented [here](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
+    spec:
+      securityContext:
+        fsGroup: 10001
+      containers:
+        - name: mgdw # container name within the pod.
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          ports:
+            - containerPort: 1433
+              name: mgdw
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_ENABLE_HADR
+              value: "1"
+            - name: MSSQL_AGENT_ENABLED
+              value: "1"
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: password2
+          volumeMounts:
+            - name: mgdw
+              mountPath: "/var/opt/mssql"
+  volumeClaimTemplates:
+    - metadata:
+        name: mgdw
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mgdw
+  namespace: mgdw
+spec:
+  type: NodePort
+  selector:
+    app: mgdw
+  ports:
+  - protocol: TCP
+    # NodePort exposes a service externally to the cluster by means of
+    # the target nodes IP address and the NodePort. NodePort is the default setting if the port field is not specified.
+    nodePort: 31433
+    # Port exposes the Kubernetes service on the specified port within the cluster. Other pods within 
+    # the cluster can communicate with this server on the specified port.
+    port: 1433
+    # TargetPort is the port on which the service will send requests to, that your pod will be listening on. Your application 
+    # in the container will need to be listening on this port also.
+    targetPort: 1433
+    name: mgdw

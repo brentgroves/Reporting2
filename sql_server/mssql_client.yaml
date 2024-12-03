@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-client-deployment
+  labels:
+    app: mssql-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-client
+  template:
+    metadata:
+      labels:
+        app: mssql-client
+    spec:
+      containers:
+      - name: mssql-client
+        image: liaisonintl/mssql-server-linux
+        ports:
+        - containerPort: 1433
