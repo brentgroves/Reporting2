@@ -30,29 +30,29 @@ def print_to_stderr(*a):
     
 try:
   ret = 0
-  pcn_list = (sys.argv[1])
-  username = (sys.argv[2])
-  password = (sys.argv[3])
-  username2 = (sys.argv[4])
-  password2 = (sys.argv[5])
-  username3 = (sys.argv[6])
-  password3 = (sys.argv[7])
-  mysql_host = (sys.argv[8])
-  mysql_port = (sys.argv[9])
-  azure_dw = (sys.argv[10])
+#%PROD%pcn_list = (sys.argv[1])
+#%PROD%username = (sys.argv[2])
+#%PROD%password = (sys.argv[3])
+#%PROD%username2 = (sys.argv[4])
+#%PROD%password2 = (sys.argv[5])
+#%PROD%username3 = (sys.argv[6])
+#%PROD%password3 = (sys.argv[7])
+#%PROD%mysql_host = (sys.argv[8])
+#%PROD%mysql_port = (sys.argv[9])
+#%PROD%azure_dw = (sys.argv[10])
 
-#%DEV%pcn_list = '123681,300758'
+  pcn_list = '123681,300758'
     # # pcn_list = '123681,300758,310507,306766,300757'
-#%DEV%username = 'mg.odbcalbion'
-#%DEV%password = 'Mob3xalbion'
-#%DEV%username2 = 'mgadmin'
-#%DEV%password2 = 'WeDontSharePasswords1!'
-#%DEV%username3 = 'root'
-#%DEV%password3 = 'password'
-#%DEV%mysql_host = 'reports31'
+  username = 'mg.odbcalbion'
+  password = 'Mob3xalbion'
+  username2 = 'mgadmin'
+  password2 = 'WeDontSharePasswords1!'
+  username3 = 'root'
+  password3 = 'password'
+  mysql_host = 'reports31'
     # # mysql_host = 'reports13'
-#%DEV%mysql_port = '30031'
-#%DEV%azure_dw = '1'
+  mysql_port = '30031'
+  azure_dw = '1'
 
 
     # https://geekflare.com/calculate-time-difference-in-python/

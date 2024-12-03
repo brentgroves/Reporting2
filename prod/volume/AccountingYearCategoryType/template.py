@@ -69,6 +69,7 @@ try:
   conn = pyodbc.connect('DSN=Plex;UID='+username+';PWD='+ password)
   # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
+# accounting_year_category_type_dw_import
   rowcount=cursor.execute("{call sproc300758_11728751_1999909 (?)}", pcn_list).rowcount
   rows = cursor.fetchall()
   print_to_stdout(f"call sproc300758_11728751_1999909 - rowcount={cursor.rowcount}")

@@ -33,22 +33,22 @@ def print_to_stderr(*a):
 
 try:
   ret = 0
-  username2 = (sys.argv[1])
-  password2 = (sys.argv[2])
-  username3 = (sys.argv[3])
-  password3 = (sys.argv[4])
-  mysql_host = (sys.argv[5])
-  mysql_port = (sys.argv[6])
-  azure_dw = (sys.argv[7])
+#%PROD%username2 = (sys.argv[1])
+#%PROD%password2 = (sys.argv[2])
+#%PROD%username3 = (sys.argv[3])
+#%PROD%password3 = (sys.argv[4])
+#%PROD%mysql_host = (sys.argv[5])
+#%PROD%mysql_port = (sys.argv[6])
+#%PROD%azure_dw = (sys.argv[7])
 
-#%DEV%username2 = 'mgadmin' 
-#%DEV%password2 = 'WeDontSharePasswords1!' 
-#%DEV%username3 = 'root'
-#%DEV%password3 = 'password'
-#%DEV%mysql_host = 'reports31'
+  username2 = 'mgadmin' 
+  password2 = 'WeDontSharePasswords1!' 
+  username3 = 'root'
+  password3 = 'password'
+  mysql_host = 'reports31'
     # # mysql_host = 'reports13'
-#%DEV%mysql_port = '30031'
-#%DEV%azure_dw = '0'
+  mysql_port = '30031'
+  azure_dw = '0'
 
     # https://geekflare.com/calculate-time-difference-in-python/
   start_time = datetime.now()

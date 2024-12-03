@@ -37,31 +37,35 @@ def print_to_stderr(*a):
 
 try:
   ret = 0
-  pcn = (sys.argv[1])
-  username2 = (sys.argv[2])
-  password2 = (sys.argv[3])
-  username3 = (sys.argv[4])
-  password3 = (sys.argv[5])
-  username4 = (sys.argv[6])
-  password4 = (sys.argv[7])
-  mysql_host = (sys.argv[8])
-  mysql_port = (sys.argv[9])
-  azure_dw = (sys.argv[10])
-## %DEV%sys.path.insert(1, '/home/brent/src/Reporting/prod/volume/modules')   
-#   sys.path.insert(1, '/volume/modules')   
+#%PROD%pcn = (sys.argv[1])
+#%PROD%username = (sys.argv[2])
+#%PROD%password = (sys.argv[3])
+#%PROD%username2 = (sys.argv[2])
+#%PROD%password2 = (sys.argv[3])
+#%PROD%username3 = (sys.argv[4])
+#%PROD%password3 = (sys.argv[5])
+#%PROD%username4 = (sys.argv[6])
+#%PROD%password4 = (sys.argv[7])
+#%PROD%mysql_host = (sys.argv[8])
+#%PROD%mysql_port = (sys.argv[9])
+#%PROD%azure_dw = (sys.argv[10])
+#   sys.path.insert(1, '/home/brent/src/Reporting/prod/volume/modules')   
+## %PROD%sys.path.insert(1, '/volume/modules')   
 
-#%DEV%pcn = '123681'
+  pcn = '123681'
   # # pcn = '300758'
-#%DEV%username2 = 'mgadmin' 
-#%DEV%password2 = 'WeDontSharePasswords1!' 
-#%DEV%username3 = 'root'
-#%DEV%password3 = 'password'
-#%DEV%username4 = 'MGEdonReportsws@plex.com'
-#%DEV%password4 = '9f45e3d-67ed-'
-#%DEV%mysql_host = 'reports31'
+  username = 'mg.odbcalbion'
+  password = 'Mob3xalbion'
+  username2 = 'mgadmin' 
+  password2 = 'WeDontSharePasswords1!' 
+  username3 = 'root'
+  password3 = 'password'
+  username4 = 'MGEdonReportsws@plex.com'
+  password4 = '9f45e3d-67ed-'
+  mysql_host = 'reports31'
   # # mysql_host = 'reports13'
-#%DEV%mysql_port = '30031'
-#%DEV%azure_dw = '1'
+  mysql_port = '30031'
+  azure_dw = '1'
 
 
   # https://geekflare.com/calculate-time-difference-in-python/
@@ -71,34 +75,70 @@ try:
   current_time = start_time.strftime("%H:%M:%S")
   print_to_stdout(f"Current Time: {current_time=}")
 
-  conn3 = mysql.connector.connect(user=username3, password=password3,
-                          host=mysql_host,
-                          port=mysql_port,
-                          database='Plex')
-
-  cursor3 = conn3.cursor()
   start_period = 0
   end_period = 0
   start_open_period = 0
   end_open_period = 0
   no_update = 9
-  # The parameters are needed in the call but the output params are not changed but are in result_args.
-  result_args =cursor3.callproc('accounting_get_period_ranges', [pcn,start_period,end_period,start_open_period,end_open_period,no_update])
-  # result_args =cursor3.callproc('accounting_balance_get_period_range', [123681,period_start2,period_end2])
-  #  https://www.mysqltutorial.org/calling-mysql-stored-procedures-python/
-  # start_period = result_args[1] #param 2
-  # end_period = result_args[2] #param 3
-  start_open_period = result_args[3] #param 4
-  end_open_period = result_args[4] #param 5
-  # no_update = result_args[5] #param 6
+
+  # https://docs.microsoft.com/en-us/sql/connect/python/pyodbc/step-1-configure-development-environment-for-pyodbc-python-development?view=sql-server-ver15
+    # password = 'wrong' 
+  conn = pyodbc.connect('DSN=Plex;UID='+username+';PWD='+ password)
+    # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
+  cursor = conn.cursor()
+
+    # accounting_period_ranges_dw_import
+    # period range is min open period to year before it
+  rowcount=cursor.execute("{call sproc123681_11728751_2112421 (?)}", pcn)
+  rows = cursor.fetchall()
+  print_to_stdout(f"call sproc123681_11728751_2112421 - rowcount={rowcount}")
+  print_to_stdout(f"call sproc123681_11728751_2112421 - messages={cursor.messages}")
+
+  cursor.close()
+  fetch_time = datetime.now()
+  tdelta = fetch_time - start_time 
+  print_to_stdout(f"fetch_time={tdelta}") 
+
+  # start_period = rows[0][1] #param 2
+  # end_period = rows[0][2] #param 3
+  start_open_period = rows[0][3] #param 4
+  end_open_period = rows[0][4] #param 5
+  # no_update = rows #param 6
+
   period = start_open_period
 
   year = period // 100
+
   # Get Max fiscal period
-  max_fiscal_period = 0
-  # The parameters are needed in the call but the output params are not changed but are in result_args.
-  result_args =cursor3.callproc('max_fiscal_period', [pcn,year,max_fiscal_period])
-  max_fiscal_period = result_args[2] #param 3
+  # max_fiscal_period = 0
+
+  # https://stackoverflow.com/questions/50750101/pyodbc-read-output-parameter-of-stored-procedure-sql-server
+  # https://dev.mysql.com/doc/connector-python/en/connector-python-introduction.html
+  # elf-contained driver. Connector/Python does not require the MySQL client library or any Python modules outside the standard library.
+  # https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html
+  conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw')
+  cursor2 = conn2.cursor()
+
+  # DECLARE @out nvarchar(max);
+  # SET NOCOUNT ON;
+  # EXEC [dbo].[storedProcedure] @x = ?, @y = ?, @z = ?,@param_out = @out OUTPUT;
+  # SELECT @out AS the_output;
+
+  sql = """\
+DECLARE @MAX_FISCAL_PERIOD INT;
+EXEC Plex.sp_max_fiscal_period @pcn = ?,@year = ?,@max_fiscal_period=@MAX_FISCAL_PERIOD OUT
+SELECT @MAX_FISCAL_PERIOD
+"""
+
+  # cursor.execute(sql, (x, y, z))
+  # row = cursor.fetchone()
+  # print(row[0])
+
+  cursor2.execute(sql, (pcn, year))
+  row = cursor2.fetchone()
+  max_fiscal_period = row[0]
+
+  # print(max_fiscal_period)
 
 
   # https://docs.python-zeep.org/en/master/transport.html?highlight=authentication#http-authentication
@@ -106,8 +146,8 @@ try:
   session.auth = HTTPBasicAuth(username4,password4)
   # session.auth = HTTPBasicAuth('MGEdonReportsws@plex.com','9f45e3d-67ed-')
 
-  client = Client(wsdl='../wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # prod
-#%DEV%client = Client(wsdl='/home/brent/src/Reporting/prod/volume/wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # stand-alone .
+#%PROD%client = Client(wsdl='../wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # prod
+  client = Client(wsdl='/home/brent/src/Reporting/prod/volume/wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # stand-alone .
   
   # https://docs.python-zeep.org/en/master/datastructures.html
   e_type = client.get_type('ns0:ExecuteDataSourceRequest')
@@ -160,43 +200,27 @@ try:
       # print(rec[row])
       # row=row+1
 
-    if '1'==azure_dw:
-      conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw',timeout=30)
-      # conn2.timeout = 10
-      # conn2.autocommit = True
-      cursor2 = conn2.cursor()
+    # conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw',timeout=30)
+    # conn2.timeout = 10
+    # conn2.autocommit = True
+    # cursor2 = conn2.cursor()
 
-      
-      # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-      sql = "delete from Plex.account_activity_summary WHERE pcn = ? and period = ?"
-      rowcount=cursor2.execute(sql, (pcn,period)).rowcount
-      print_to_stdout(f"delete from Plex.account_activity_summary - rowcount={rowcount}")
-      print_to_stdout(f"delete from Plex.account_activity_summary - messages={cursor2.messages}")
-      cursor2.commit()
+    
+    # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
+    sql = "delete from Plex.account_activity_summary WHERE pcn = ? and period = ?"
+    rowcount=cursor2.execute(sql, (pcn,period)).rowcount
+    print_to_stdout(f"delete from Plex.account_activity_summary - rowcount={rowcount}")
+    print_to_stdout(f"delete from Plex.account_activity_summary - messages={cursor2.messages}")
+    cursor2.commit()
 
-      im2 ='''insert into Plex.account_activity_summary (pcn,period,account_no,beginning_balance,debit,credit,balance,ending_balance)
-      values (?,?,?,?,?,?,?,?)'''
-      # test = rec[0:500]
-      cursor2.fast_executemany = True
-      cursor2.executemany(im2,rec) 
-      cursor2.commit()
-
-    cursor3.execute(f"delete from Plex.account_activity_summary WHERE pcn = {pcn} and period = {period}")
-    # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-    print_to_stdout(f"delete from Plex.account_activity_summary - rowcount={cursor3.rowcount}")
-    # print_to_stdout(f"{txt} - messages={cursor2.messages}")
-    conn3.commit()
-
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
     im2 ='''insert into Plex.account_activity_summary (pcn,period,account_no,beginning_balance,debit,credit,balance,ending_balance)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s) '''
+    values (?,?,?,?,?,?,?,?)'''
+    # test = rec[0:500]
+    cursor2.fast_executemany = True
+    cursor2.executemany(im2,rec) 
+    cursor2.commit()
 
-    cursor3.executemany(im2,rec)
-    # cursor2.executemany(im2,records_to_insert)
-    conn3.commit()
-  
+ 
     if (period < max_fiscal_period):
       period = period + 1
     else:
@@ -205,13 +229,12 @@ try:
       # Get Max fiscal period
       max_fiscal_period = 0
       # The parameters are needed in the call but the output params are not changed but are in result_args.
-      result_args =cursor3.callproc('max_fiscal_period', [pcn,year,max_fiscal_period])
-      max_fiscal_period = result_args[2] #param 3
+      cursor2.execute(sql, (pcn, year))
+      row = cursor2.fetchone()
+      max_fiscal_period = row[0]
     # print_to_stdout(f"period={period}")
 
-  if '1'==azure_dw:
-    cursor2.close()
-  cursor3.close()
+  cursor2.close()
 
 except pyodbc.Error as ex:
     ret = 1
@@ -230,12 +253,10 @@ finally:
     end_time = datetime.now()
     tdelta = end_time - start_time 
     print_to_stdout(f"total time: {tdelta}") 
+    if 'conn' in globals():
+        conn.close()
     if 'conn2' in globals():
         conn2.close()
-    if 'conn3' in globals():
-        if conn3.is_connected():
-            conn3.close()
-            # print("MySQL connection is closed")
     sys.exit(ret)
 
 # #python -mzeep Plex_SOAP_test.wsdl
