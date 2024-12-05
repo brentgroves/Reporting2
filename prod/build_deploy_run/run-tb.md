@@ -1,5 +1,9 @@
 # run tb
 
+## Reporting2
+
+Tested the Reporing2 repo on 12/05/24. Removed references to mysql because I was unable to connect to mysql on reports31.
+
 ## Reason for TB
 
 /*
@@ -170,7 +174,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
-
+TB-202311_to_202411_on_12-05_DM_HL
 TB-202310_to_202410_on_11-11_DM_HL
 TB-202310_to_202410_on_11-05_DM_HL
 TB-202310_to_202410_on_11-05_DM_HL
@@ -246,8 +250,8 @@ follow steps
 * with start_period_update = 0 so all the balance records will be
 * pulled from Plex everytime.
  */
- TB-202306_to_202406_on_07-07_DM_HL
-
+TB-202311_to_202411_on_12-05_DM_HL
+TB-202306_to_202406_on_07-07_DM_HL
 TB-202211_to_202311_on_12-12_DM_LR_JS
 TB-202211_to_202311_on_12-08_DM_LR_JS
 TB-202207_to_202307_on_08-24_DM
@@ -309,6 +313,7 @@ go to **[credentials](../../../secrets/namespaces/default/credentials.yaml)**
 and use username2/password2 to authenticate.
 
 **Format of file name**
+TB-202311_to_202411_on_12-05_DM_HL
 TB-202310_to_202410_on_11-11_DM_HL
 
 TB-202310_to_202410_on_11-05_DM_HL

@@ -37,20 +37,18 @@ def print_to_stderr(*a):
 
 try:
   ret = 0
-  sys.exit(ret)
-
   pcn = (sys.argv[1])
   username = (sys.argv[2])
   password = (sys.argv[3])
-  username2 = (sys.argv[2])
-  password2 = (sys.argv[3])
-  username3 = (sys.argv[4])
-  password3 = (sys.argv[5])
-  username4 = (sys.argv[6])
-  password4 = (sys.argv[7])
-  mysql_host = (sys.argv[8])
-  mysql_port = (sys.argv[9])
-  azure_dw = (sys.argv[10])
+  username2 = (sys.argv[4])
+  password2 = (sys.argv[5])
+  username3 = (sys.argv[6])
+  password3 = (sys.argv[7])
+  username4 = (sys.argv[8])
+  password4 = (sys.argv[9])
+  mysql_host = (sys.argv[10])
+  mysql_port = (sys.argv[11])
+  azure_dw = (sys.argv[12])
 ## %DEV%sys.path.insert(1, '/home/brent/src/Reporting/prod/volume/modules')   
 #   sys.path.insert(1, '/volume/modules')   
 

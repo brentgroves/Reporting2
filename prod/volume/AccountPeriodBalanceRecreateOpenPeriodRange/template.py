@@ -55,53 +55,31 @@ try:
   current_time = start_time.strftime("%H:%M:%S")
   print_to_stdout(f"Current Time: {current_time}")
 
-  if '1'==azure_dw:
-    # https://www.pythonfixing.com/2022/02/fixed-how-to-set-db-connection-timeout.html
-    conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw',timeout=30)
-    # conn2.timeout = 10
-    # conn2.autocommit = True
-    cursor2 = conn2.cursor()
+  # https://www.pythonfixing.com/2022/02/fixed-how-to-set-db-connection-timeout.html
+  conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw',timeout=30)
+  # conn2.timeout = 10
+  # conn2.autocommit = True
+  cursor2 = conn2.cursor()
 
-    
-    # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-    rowcount=cursor2.execute("{call Plex.account_period_balance_delete_open_period_range (?)}",pcn).rowcount
-    print_to_stdout(f"call Plex.account_period_balance_delete_open_period_range - rowcount={rowcount}")
-    print_to_stdout(f"call Plex.account_period_balance_delete_open_period_range - messages={cursor2.messages}")
-    cursor2.commit()
+  
+  # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
+  rowcount=cursor2.execute("{call Plex.account_period_balance_delete_open_period_range (?)}",pcn).rowcount
+  print_to_stdout(f"call Plex.account_period_balance_delete_open_period_range - rowcount={rowcount}")
+  print_to_stdout(f"call Plex.account_period_balance_delete_open_period_range - messages={cursor2.messages}")
+  cursor2.commit()
 
-    rowcount=cursor2.execute("{call Plex.account_period_balance_recreate_open_period_range (?)}",pcn).rowcount
+  rowcount=cursor2.execute("{call Plex.account_period_balance_recreate_open_period_range (?)}",pcn).rowcount
 
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # The return value is always the cursor itself:
-    print_to_stdout(f"call Plex.account_period_balance_recreate_open_period_range - rowcount={rowcount}")
-    print_to_stdout(f"call Plex.account_period_balance_recreate_open_period_range - messages={cursor2.messages}")
-    cursor2.commit()
-    cursor2.close()
-    # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-    # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
-
-  conn3 = mysql.connector.connect(user=username3, password=password3,
-                          host=mysql_host,
-                          port=mysql_port,
-                          database='Plex')
-
-  cursor3 = conn3.cursor()
-
-  cursor3.callproc('account_period_balance_delete_open_period_range', [pcn])
-  # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-  print_to_stdout(f"call Plex.account_period_balance_delete_open_period_range({pcn}) - rowcount={cursor3.rowcount}")
-  # print_to_stdout(f"{txt} - messages={cursor2.messages}")
-  conn3.commit()
-
-  cursor3.callproc('account_period_balance_recreate_open_period_range', [pcn])
-  # rowcount=cursor2.execute(txt.format(dellist = params)).rowcount
-  print_to_stdout(f"call Plex.account_period_balance_append_open_period_range({pcn}) - rowcount={cursor3.rowcount}")
-  # print_to_stdout(f"{txt} - messages={cursor2.messages}")
-  conn3.commit()
-  cursor3.close()
-
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # The return value is always the cursor itself:
+  print_to_stdout(f"call Plex.account_period_balance_recreate_open_period_range - rowcount={rowcount}")
+  print_to_stdout(f"call Plex.account_period_balance_recreate_open_period_range - messages={cursor2.messages}")
+  cursor2.commit()
+  cursor2.close()
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
+  # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+  # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
 
 except pyodbc.Error as ex:
   ret = 1
@@ -122,8 +100,4 @@ finally:
   print_to_stdout(f"total time: {tdelta}") 
   if 'conn2' in globals():
     conn2.close()
-  if 'conn3' in globals():
-    if conn3.is_connected():
-      conn3.close()
-      # print("MySQL connection is closed")
   sys.exit(ret)
