@@ -74,8 +74,11 @@ try:
     # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
     
-    # accounting_period_ranges_dw_import
-    # period range is min open period to year before it
+  # accounting_period_ranges_dw_import
+  # This was originally a call to a SPROC that retrieved data from the 
+  # MySQL DW accounting_period_ranges table. Which had the advantage of
+  # the developer being able to change values of that table if desired
+  # for debugging purposes.
   rowcount=cursor.execute("{call sproc123681_11728751_2112421 (?)}", pcn)
   rows = cursor.fetchall()
   print_to_stdout(f"call sproc123681_11728751_2112421 - rowcount={rowcount}")
@@ -95,7 +98,7 @@ try:
   # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
   
-      # accounting_balance_append_period_range_dw_import
+  # accounting_balance_append_period_range_dw_import
   rowcount=cursor.execute("{call sproc300758_11728751_2000117 (?,?,?)}", pcn,start_period,end_period).rowcount
   rows = cursor.fetchall()
   print_to_stdout(f"call sproc300758_11728751_2000117 - rowcount={rowcount}")
@@ -114,20 +117,19 @@ try:
   """
   cursor2.execute(tsql, (pcn)).rowcount
 
-        # cursor2 = conn2.cursor()
-        # # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-        # rowcount=cursor2.execute("{call Plex.accounting_balance_delete_period_range}").rowcount
-        # rowcount=cursor2.execute("{call Scratch.accounting_balance_delete_period_range}").rowcount
-        # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-        # The return value is always the cursor itself:
+  # # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
+  # rowcount=cursor2.execute("{call Plex.accounting_balance_delete_period_range}").rowcount
+  # rowcount=cursor2.execute("{call Scratch.accounting_balance_delete_period_range}").rowcount
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # The return value is always the cursor itself:
   print_to_stdout(f"call Plex.accounting_balance_delete_period_range - rowcount={rowcount}")
   print_to_stdout(f"call Plex.accounting_balance_delete_period_range - messages={cursor2.messages}")
 
   cursor2.commit()
 
-        # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-        # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-        # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
+  # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
 
   im2 = '''INSERT INTO Plex.accounting_balance (pcn, account_key, account_no, period, debit, credit, balance)
           VALUES(?, ?, ?, ?, ?, ?, ?);'''
@@ -140,7 +142,7 @@ try:
   cursor2.commit()
   cursor2.close()
 
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+# https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
 except pyodbc.Error as ex:
   ret = 1
   error_msg = ex.args[1]

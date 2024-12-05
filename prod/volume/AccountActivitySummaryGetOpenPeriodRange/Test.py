@@ -37,21 +37,23 @@ def print_to_stderr(*a):
 
 try:
   ret = 0
-#%PROD%pcn = (sys.argv[1])
-#%PROD%username2 = (sys.argv[2])
-#%PROD%password2 = (sys.argv[3])
-#%PROD%username3 = (sys.argv[4])
-#%PROD%password3 = (sys.argv[5])
-#%PROD%username4 = (sys.argv[6])
-#%PROD%password4 = (sys.argv[7])
-#%PROD%mysql_host = (sys.argv[8])
-#%PROD%mysql_port = (sys.argv[9])
-#%PROD%azure_dw = (sys.argv[10])
-#   sys.path.insert(1, '/home/brent/src/Reporting/prod/volume/modules')   
-## %PROD%sys.path.insert(1, '/volume/modules')   
+  # pcn = (sys.argv[1])
+  # username = (sys.argv[2])
+  # password = (sys.argv[3])
+  # username2 = (sys.argv[2])
+  # password2 = (sys.argv[3])
+  # username3 = (sys.argv[4])
+  # password3 = (sys.argv[5])
+  # username4 = (sys.argv[6])
+  # password4 = (sys.argv[7])
+  # mysql_host = (sys.argv[8])
+  # mysql_port = (sys.argv[9])
+  # azure_dw = (sys.argv[10])
+## %DEV%sys.path.insert(1, '/home/brent/src/Reporting/prod/volume/modules')   
+#   sys.path.insert(1, '/volume/modules')   
 
   pcn = '123681'
-  # # pcn = '300758'
+    # pcn = '300758'
   username = 'mg.odbcalbion'
   password = 'Mob3xalbion'
   username2 = 'mgadmin' 
@@ -61,7 +63,7 @@ try:
   username4 = 'MGEdonReportsws@plex.com'
   password4 = '9f45e3d-67ed-'
   mysql_host = 'reports31'
-  # # mysql_host = 'reports13'
+    # mysql_host = 'reports13'
   mysql_port = '30031'
   azure_dw = '1'
 
@@ -79,7 +81,7 @@ try:
   end_open_period = 0
   no_update = 9
 
-    # https://docs.microsoft.com/en-us/sql/connect/python/pyodbc/step-1-configure-development-environment-for-pyodbc-python-development?view=sql-server-ver15
+  # https://docs.microsoft.com/en-us/sql/connect/python/pyodbc/step-1-configure-development-environment-for-pyodbc-python-development?view=sql-server-ver15
     # password = 'wrong' 
   conn = pyodbc.connect('DSN=Plex;UID='+username+';PWD='+ password)
     # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
@@ -135,15 +137,16 @@ SELECT @MAX_FISCAL_PERIOD
   row = cursor2.fetchone()
   max_fiscal_period = row[0]
 
-  print(max_fiscal_period)
+  # print(max_fiscal_period)
+
 
   # https://docs.python-zeep.org/en/master/transport.html?highlight=authentication#http-authentication
   session = Session()
   session.auth = HTTPBasicAuth(username4,password4)
   # session.auth = HTTPBasicAuth('MGEdonReportsws@plex.com','9f45e3d-67ed-')
 
-#%PROD%client = Client(wsdl='../wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # prod
-  client = Client(wsdl='/home/brent/src/Reporting/prod/volume/wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # stand-alone .
+  client = Client(wsdl='/home/brent/src/Reporting2/prod/volume/wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # prod
+#%DEV%client = Client(wsdl='/home/brent/src/Reporting2/prod/volume/wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # stand-alone .
   
   # https://docs.python-zeep.org/en/master/datastructures.html
   e_type = client.get_type('ns0:ExecuteDataSourceRequest')
@@ -151,10 +154,12 @@ SELECT @MAX_FISCAL_PERIOD
   ip_type=client.get_type('ns0:InputParameter')
   ip_pcn = ip_type(Value=pcn,Name='@PCNs',Required=False,Output=False)
 
+
   while period <= end_open_period:
     # account_no_from and account_no_to parameters are inclusive
     # Account total from accounting_account_DW_Import on Dec 3,2024 = 4889
-    # Try to break accounts into 2 groups of ~ 2500
+    # Try to break accounts into 2 groups of ~ 2500 records
+    # to prevent web service call from timing out.
 
     # Total records = 2209 + 2684 = 4893
     # row_count = 2209 on Dec 3, 2024
@@ -163,19 +168,6 @@ SELECT @MAX_FISCAL_PERIOD
 
     # # row_count = 2684 on Dec 3, 2024
     # account_no_from = '66666-666-6666'
-    # account_no_to = '99999-999-9999'
-
-
-    # # row_count = 925 on Dec 3, 2024
-    # account_no_from = '00000-000-0000'
-    # account_no_to = '55555-555-5555'
-
-    # # row_count = 3507 on Dec 3, 2024
-    # account_no_from = '55555-555-5556'
-    # account_no_to = '77777-777-7777'
-
-    # # row_count = 461 on Dec 3, 2024
-    # account_no_from = '77777-777-7778'
     # account_no_to = '99999-999-9999'
 
     for x in range(2):
@@ -190,10 +182,12 @@ SELECT @MAX_FISCAL_PERIOD
 
       test=0
       response = client.service.ExecuteDataSource(e)
-      if response.Error == True:
-        test=1
-      if response.Error == False:
-        test=2
+
+      # test=0
+      # if response.Error == True:
+      #   test=1
+      # if response.Error == False:
+      #   test=2
 
       # collect desired columns of the result set into a list  
       list = response['ResultSets'].ResultSet[0].Rows.Row
@@ -214,6 +208,7 @@ SELECT @MAX_FISCAL_PERIOD
         # print(rec[row])
         # row=row+1
 
+    
       # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
       sql = "delete from Plex.account_activity_summary WHERE pcn = ? and period = ? and account_no BETWEEN ? and ?"
       rowcount=cursor2.execute(sql, (pcn,period,account_no_from,account_no_to)).rowcount
@@ -246,7 +241,6 @@ SELECT @MAX_FISCAL_PERIOD
     # print_to_stdout(f"period={period}")
 
   cursor2.close()
-
 
 except pyodbc.Error as ex:
     ret = 1

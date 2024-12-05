@@ -5,20 +5,40 @@ $3: 202311
 $4: 202411
 $5: 0
 $6: once
-Starting: AccountingBalanceAppendPeriodRange
-script-start.py: current_time='18:56:08'
+Starting: AccountingPeriodRanges
+script-start.py: current_time='20:00:00'
 MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (111)
-script-start.py: total time: 0:00:00.674947
-AccountingBalanceAppendPeriodRange.py: Current Time: current_time='18:56:09'
-AccountingBalanceAppendPeriodRange.py: call sproc123681_11728751_2112421 - rowcount=<pyodbc.Cursor object at 0x7495b62de9b0>
-AccountingBalanceAppendPeriodRange.py: call sproc123681_11728751_2112421 - messages=[]
-AccountingBalanceAppendPeriodRange.py: fetch_time=0:00:02.940759
-AccountingBalanceAppendPeriodRange.py: call sproc300758_11728751_2000117 - rowcount=-1
-AccountingBalanceAppendPeriodRange.py: call sproc300758_11728751_2000117 - messages=[]
-AccountingBalanceAppendPeriodRange.py: fetch_time=0:00:06.023568
-AccountingBalanceAppendPeriodRange.py: call Plex.accounting_balance_delete_period_range - rowcount=-1
-AccountingBalanceAppendPeriodRange.py: call Plex.accounting_balance_delete_period_range - messages=[]
-AccountingBalanceAppendPeriodRange.py: total time: 0:00:07.014756
-script-end.py: current_time='18:56:17'
+script-start.py: total time: 0:00:00.659048
+AccountingPeriodRanges.py: Current Time: 20:00:01
+AccountingPeriodRanges.py: call sproc123681_11728751_2112421 - rowcount=<pyodbc.Cursor object at 0x7798206a28b0>
+AccountingPeriodRanges.py: call sproc123681_11728751_2112421 - messages=[]
+AccountingPeriodRanges.py: fetch_time=0:00:03.478396
+AccountingPeriodRanges.py: delete from Plex.accounting_period_ranges where pcn in (123681) - rowcount=1
+AccountingPeriodRanges.py: delete from Plex.accounting_period_ranges where pcn in (123681) - messages=[]
+AccountingPeriodRanges.py: total time: 0:00:04.280315
+script-end.py: current_time='20:00:06'
 MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (111)
-script-end.py: total time: 0:00:00.623095
+script-end.py: total time: 0:00:00.561059
+AccountingPeriodRanges time: 0.464
+
+Starting: AccountActivitySummaryGetOpenPeriodRange
+script-start.py: current_time='20:00:07'
+MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (111)
+script-start.py: total time: 0:00:00.601880
+TEST.py: Current Time: current_time='20:00:08'
+TEST.py: call sproc123681_11728751_2112421 - rowcount=<pyodbc.Cursor object at 0x73d5fb9ce4b0>
+TEST.py: call sproc123681_11728751_2112421 - messages=[]
+TEST.py: fetch_time=0:00:02.825458
+202412
+TEST.py: delete from Plex.account_activity_summary - rowcount=2209
+TEST.py: delete from Plex.account_activity_summary - messages=[]
+TEST.py: delete from Plex.account_activity_summary - rowcount=2684
+TEST.py: delete from Plex.account_activity_summary - messages=[]
+TEST.py: delete from Plex.account_activity_summary - rowcount=2209
+TEST.py: delete from Plex.account_activity_summary - messages=[]
+TEST.py: delete from Plex.account_activity_summary - rowcount=2684
+TEST.py: delete from Plex.account_activity_summary - messages=[]
+TEST.py: total time: 0:00:38.362364
+script-end.py: current_time='20:00:47'
+MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (111)
+script-end.py: total time: 0:00:00.562588

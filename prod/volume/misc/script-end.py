@@ -29,25 +29,25 @@ def print_to_stderr(*a):
     print(os.path.basename(__file__)+':',*a, file = sys.stderr)
 
 try:
-#%PROD%script_key = (sys.argv[1])
-#%PROD%error_bit = int((sys.argv[2])) # need an integer for mysql call
-#%PROD%username = (sys.argv[3])
-#%PROD%password = (sys.argv[4])
-#%PROD%username2 = (sys.argv[5])
-#%PROD%password2 = (sys.argv[6])
-#%PROD%mysql_host = (sys.argv[7])
-#%PROD%mysql_port = (sys.argv[8])
-#%PROD%azure_dw = (sys.argv[9])
+  script_key = (sys.argv[1])
+  error_bit = int((sys.argv[2])) # need an integer for mysql call
+  username = (sys.argv[3])
+  password = (sys.argv[4])
+  username2 = (sys.argv[5])
+  password2 = (sys.argv[6])
+  mysql_host = (sys.argv[7])
+  mysql_port = (sys.argv[8])
+  azure_dw = (sys.argv[9])
 
-  script_key = '4'
-  error_bit = int('0')
-  username = 'mgadmin'
-  password = 'WeDontSharePasswords1!'
-  username2 = 'root'
-  password2 = 'password'    # print(f"params={params}")
-  mysql_host = 'reports31'
-  mysql_port = '30031'
-  azure_dw = '1'
+#%DEV%script_key = '4'
+#%DEV%error_bit = int('0')
+#%DEV%username = 'mgadmin'
+#%DEV%password = 'WeDontSharePasswords1!'
+#%DEV%username2 = 'root'
+#%DEV%password2 = 'password'    # print(f"params={params}")
+#%DEV%mysql_host = 'reports31'
+#%DEV%mysql_port = '30031'
+#%DEV%azure_dw = '1'
 
   ret = 0
   # https://geekflare.com/calculate-time-difference-in-python/

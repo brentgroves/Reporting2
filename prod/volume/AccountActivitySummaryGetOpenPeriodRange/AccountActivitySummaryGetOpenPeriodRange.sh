@@ -7,10 +7,15 @@
 
 # exec 3>error-msg 4>dbg-msg 5>error-num 6>tm-msg 
 # exec 7>error-msg 8>dbg-msg 9>error-num 10>tm-msg 
+printf "\nline:10" 
 
 {
 ../misc/script-start.py 7 "$username2" "$password2" "$username3" "$password3" "$MYSQL_HOST" "$MYSQL_PORT" "$AZURE_DW" 1>&4 2>&3
-TIMEFORMAT='%R'; time ./AccountActivitySummaryGetOpenPeriodRange.py "$pcn" "$username2" "$password2" "$username3" "$password3" "$username4" "$password4" "$MYSQL_HOST" "$MYSQL_PORT" "$AZURE_DW" 1>&4 2>&3
+printf "\nline:14" 
+
+# TIMEFORMAT='%R'; time ./AccountActivitySummaryGetOpenPeriodRange.py "$pcn" "$username2" "$password2" "$username3" "$password3" "$username4" "$password4" "$MYSQL_HOST" "$MYSQL_PORT" "$AZURE_DW" 1>&4 2>&3
+TIMEFORMAT='%R'; time ./TEST.py "$pcn" "$username2" "$password2" "$username3" "$password3" "$username4" "$password4" "$MYSQL_HOST" "$MYSQL_PORT" "$AZURE_DW" 1>&4 2>&3
+printf "\nline:18"
 # TIMEFORMAT='%R'; time ./AccountingAccount.py '123681,300758,310507,306766,300757' 1>&8 2>&7
 result=$?
 if [[ $result -eq 0 ]]

@@ -1,5 +1,54 @@
 # run tb
 
+## Reason for TB
+
+/*
+Accounting_account: accounting_account_DW_Import  
+
+This is used to determine the current accounts needed in the account_period_balance table. It has
+additional fields such as the category account and sub category account that are no longer supported by
+Plex. I believe the Multi-Level in the Plex Multi-Level report has to do with an account that used the
+category and sub-category account.  Not supporting the category and sub-category account linkage is
+the reason Southfield's Plex Multi-Level report does not show many of the accounts.
+
+-- select count(*)
+-- select*
+from accounting_v_account_e  a
+join accounting_v_category_type act -- This is the value used by the new method of configuring plex accounts.
+on a.category_type=act.category_type  -- 36,636
+-- Category numbers linked to an account by the a category_account record will no longer be supported by Plex
+left outer join accounting_v_category_account_e ca  --
+on a.plexus_customer_no=ca.plexus_customer_no
+and a.account_no=ca.account_no
+left outer join accounting_v_category_e c  --
+on ca.plexus_customer_no=c.plexus_customer_no
+and ca.category_no=c.category_no
+left outer join accounting_v_category_type t -- This is the value used by the old method of configuring plex accounts.
+on c.category_type=t.category_type
+-- sub category numbers linked to an account by the sub category_account record will no longer be supported by Plex
+left outer JOIN accounting_v_sub_category_account_e AS sca
+--JOIN accounting_v_Sub_Category_Account_e AS SCA -- 4,204 for 123681
+ON a.plexus_customer_no = sca.plexus_customer_no
+and a.account_no = sca.account_no
+left outer join accounting_v_sub_category_e sc  --
+on sca.plexus_customer_no=sc.plexus_customer_no
+and sca.sub_category_no=sc.sub_category_no
+left outer join accounting_v_category_e c2  --
+on sc.plexus_customer_no=c2.plexus_customer_no
+and sc.category_no=c2.category_no
+left outer join accounting_v_category_type t2 -- This is another value used by the old method of configuring plex accounts.
+on c2.category_type=t2.category_type
+left outer join account_balance_start b
+on a.plexus_customer_no = b.pcn
+and a.account_key=b.account_key
+
+AccountingYearCategoryType:
+It is used to keep track of if an account is classified as an expense or revenue for each year.
+This is needed in YTD calculations which checks if an account  
+is a revenue/expense to determine whether to reset YTD values to 0 for every year.
+
+*/
+
 ## Remove TB dependancy
 
 Did this on Dec 2nd in Reporting2 repo because I was no longer able to ping google.com from the Avilla K8s. I told them I was going to get rid of this cluster and try to recreate one on the linamar vlan.

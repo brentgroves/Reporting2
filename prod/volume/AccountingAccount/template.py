@@ -67,6 +67,7 @@ try:
   conn = pyodbc.connect('DSN=Plex;UID='+username+';PWD='+ password)
   # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
+# accounting_account_DW_Import
   cursor.execute("{call sproc300758_11728751_1978024 (?)}", pcn_list)
   rows = cursor.fetchall()
   # insertObject.append(rows[0])

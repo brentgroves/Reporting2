@@ -37,35 +37,37 @@ def print_to_stderr(*a):
 
 try:
   ret = 0
-#%PROD%pcn = (sys.argv[1])
-#%PROD%username = (sys.argv[2])
-#%PROD%password = (sys.argv[3])
-#%PROD%username2 = (sys.argv[2])
-#%PROD%password2 = (sys.argv[3])
-#%PROD%username3 = (sys.argv[4])
-#%PROD%password3 = (sys.argv[5])
-#%PROD%username4 = (sys.argv[6])
-#%PROD%password4 = (sys.argv[7])
-#%PROD%mysql_host = (sys.argv[8])
-#%PROD%mysql_port = (sys.argv[9])
-#%PROD%azure_dw = (sys.argv[10])
-#   sys.path.insert(1, '/home/brent/src/Reporting/prod/volume/modules')   
-## %PROD%sys.path.insert(1, '/volume/modules')   
+  sys.exit(ret)
 
-  pcn = '123681'
+  pcn = (sys.argv[1])
+  username = (sys.argv[2])
+  password = (sys.argv[3])
+  username2 = (sys.argv[2])
+  password2 = (sys.argv[3])
+  username3 = (sys.argv[4])
+  password3 = (sys.argv[5])
+  username4 = (sys.argv[6])
+  password4 = (sys.argv[7])
+  mysql_host = (sys.argv[8])
+  mysql_port = (sys.argv[9])
+  azure_dw = (sys.argv[10])
+## %DEV%sys.path.insert(1, '/home/brent/src/Reporting/prod/volume/modules')   
+#   sys.path.insert(1, '/volume/modules')   
+
+#%DEV%pcn = '123681'
   # # pcn = '300758'
-  username = 'mg.odbcalbion'
-  password = 'Mob3xalbion'
-  username2 = 'mgadmin' 
-  password2 = 'WeDontSharePasswords1!' 
-  username3 = 'root'
-  password3 = 'password'
-  username4 = 'MGEdonReportsws@plex.com'
-  password4 = '9f45e3d-67ed-'
-  mysql_host = 'reports31'
+#%DEV%username = 'mg.odbcalbion'
+#%DEV%password = 'Mob3xalbion'
+#%DEV%username2 = 'mgadmin' 
+#%DEV%password2 = 'WeDontSharePasswords1!' 
+#%DEV%username3 = 'root'
+#%DEV%password3 = 'password'
+#%DEV%username4 = 'MGEdonReportsws@plex.com'
+#%DEV%password4 = '9f45e3d-67ed-'
+#%DEV%mysql_host = 'reports31'
   # # mysql_host = 'reports13'
-  mysql_port = '30031'
-  azure_dw = '1'
+#%DEV%mysql_port = '30031'
+#%DEV%azure_dw = '1'
 
 
   # https://geekflare.com/calculate-time-difference-in-python/
@@ -87,8 +89,7 @@ try:
     # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
 
-    # accounting_period_ranges_dw_import
-    # period range is min open period to year before it
+  # accounting_period_ranges_dw_import
   rowcount=cursor.execute("{call sproc123681_11728751_2112421 (?)}", pcn)
   rows = cursor.fetchall()
   print_to_stdout(f"call sproc123681_11728751_2112421 - rowcount={rowcount}")
@@ -124,7 +125,7 @@ try:
   # EXEC [dbo].[storedProcedure] @x = ?, @y = ?, @z = ?,@param_out = @out OUTPUT;
   # SELECT @out AS the_output;
 
-  sql = """\
+  sql_max = """\
 DECLARE @MAX_FISCAL_PERIOD INT;
 EXEC Plex.sp_max_fiscal_period @pcn = ?,@year = ?,@max_fiscal_period=@MAX_FISCAL_PERIOD OUT
 SELECT @MAX_FISCAL_PERIOD
@@ -134,7 +135,7 @@ SELECT @MAX_FISCAL_PERIOD
   # row = cursor.fetchone()
   # print(row[0])
 
-  cursor2.execute(sql, (pcn, year))
+  cursor2.execute(sql_max, (pcn, year))
   row = cursor2.fetchone()
   max_fiscal_period = row[0]
 
@@ -146,8 +147,8 @@ SELECT @MAX_FISCAL_PERIOD
   session.auth = HTTPBasicAuth(username4,password4)
   # session.auth = HTTPBasicAuth('MGEdonReportsws@plex.com','9f45e3d-67ed-')
 
-#%PROD%client = Client(wsdl='../wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # prod
-  client = Client(wsdl='/home/brent/src/Reporting/prod/volume/wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # stand-alone .
+  client = Client(wsdl='/home/brent/src/Reporting2/prod/volume/wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # prod
+#%DEV%client = Client(wsdl='/home/brent/src/Reporting2/prod/volume/wsdl/Plex_SOAP_prod.wsdl',transport=Transport(session=session)) # stand-alone .
   
   # https://docs.python-zeep.org/en/master/datastructures.html
   e_type = client.get_type('ns0:ExecuteDataSourceRequest')
@@ -157,68 +158,75 @@ SELECT @MAX_FISCAL_PERIOD
 
 
   while period <= end_open_period:
-    ip_period_start = ip_type(Value=period,Name='@Period_Start',Required=True,Output=False)
-    ip_period_end = ip_type(Value=period,Name='@Period_End',Required=True,Output=False)
-    Parameters=a_ip_type([ip_pcn,ip_period_start,ip_period_end])
+    # account_no_from and account_no_to parameters are inclusive
+    # Account total from accounting_account_DW_Import on Dec 3,2024 = 4889
+    # Try to break accounts into 2 groups of ~ 2500 records
+    # to prevent web service call from timing out.
 
-    # e=e_type(DataSourceKey=8619,InputParameters=[{'Value':'4/26/2022','Name':'@Report_Date','Required':False,'Output':False}],DataSourceName='Detailed_Production_Get_New')
-    e=e_type(DataSourceKey=4814,InputParameters=Parameters,DataSourceName='Account_Activity_Summary_xPCN_Get')
+    # Total records = 2209 + 2684 = 4893
+    # row_count = 2209 on Dec 3, 2024
+    account_no_from = '00000-000-0000'
+    account_no_to = '66666-666-6666'
 
-    response = client.service.ExecuteDataSource(e)
-    # print(response['OutputParameters'])
+    # # row_count = 2684 on Dec 3, 2024
+    # account_no_from = '66666-666-6666'
+    # account_no_to = '99999-999-9999'
 
-  # Section for determining column indexes  
-    # column_list = response['ResultSets'].ResultSet[0].Rows.Row[0].Columns.Column
-    # column_names=""
-    # column_values=""
-    # dic ={}
-    # ind=0
-    # for j in column_list:
-    #   dic.update({j.Name:ind}) 
-    #   print(str(ind) + '-' + j.Name)
-    #   ind=ind+1
+    for x in range(2):
+      ip_period_start = ip_type(Value=period,Name='@Period_Start',Required=True,Output=False)
+      ip_period_end = ip_type(Value=period,Name='@Period_End',Required=True,Output=False)
+      ip_account_no_from = ip_type(Value=account_no_from,Name='@Account_No_From',Required=False,Output=False)
+      ip_account_no_to = ip_type(Value=account_no_to,Name='@Account_No_To',Required=False,Output=False)
+      Parameters=a_ip_type([ip_pcn,ip_period_start,ip_period_end,ip_account_no_from,ip_account_no_to])
 
-    # print(dic)
+      # e=e_type(DataSourceKey=8619,InputParameters=[{'Value':'4/26/2022','Name':'@Report_Date','Required':False,'Output':False}],DataSourceName='Detailed_Production_Get_New')
+      e=e_type(DataSourceKey=4814,InputParameters=Parameters,DataSourceName='Account_Activity_Summary_xPCN_Get')
 
-    # collect desired columns of the result set into a list  
-    list = response['ResultSets'].ResultSet[0].Rows.Row
-    rec=[]
-    row=0
-    for i in list:
-      # balance = float(i.Columns.Column[5].Value)-float(i.Columns.Column[6].Value)
-      # str(round(float(i.Columns.Column[5].Value)-float(i.Columns.Column[6].Value),5)),
+      test=0
+      response = client.service.ExecuteDataSource(e)
 
-      rec.append((pcn,period,
-      i.Columns.Column[1].Value,
-      i.Columns.Column[4].Value,
-      i.Columns.Column[5].Value,
-      i.Columns.Column[6].Value,
-      str(round(float(i.Columns.Column[5].Value)-float(i.Columns.Column[6].Value),5)),
-      # i.Columns.Column[5].Value-i.Columns.Column[6].Value,
-      i.Columns.Column[7].Value))
-      # debug section
-      # print(rec[row])
-      # row=row+1
+      # test=0
+      # if response.Error == True:
+      #   test=1
+      # if response.Error == False:
+      #   test=2
 
-    # conn2 = pyodbc.connect('DSN=dw;UID='+username2+';PWD='+ password2 + ';DATABASE=mgdw',timeout=30)
-    # conn2.timeout = 10
-    # conn2.autocommit = True
-    # cursor2 = conn2.cursor()
+      # collect desired columns of the result set into a list  
+      list = response['ResultSets'].ResultSet[0].Rows.Row
+      rec=[]
+      row=0
+      for i in list:
+        # balance = float(i.Columns.Column[5].Value)-float(i.Columns.Column[6].Value)
+        # str(round(float(i.Columns.Column[5].Value)-float(i.Columns.Column[6].Value),5)),
+        rec.append((pcn,period,
+        i.Columns.Column[1].Value, # account_no
+        i.Columns.Column[4].Value, # beginning balance
+        i.Columns.Column[5].Value, # debit
+        i.Columns.Column[6].Value, # credit
+        str(round(float(i.Columns.Column[5].Value)-float(i.Columns.Column[6].Value),5)),
+        # i.Columns.Column[5].Value-i.Columns.Column[6].Value,
+        i.Columns.Column[7].Value)) # ending balance
+        # debug section
+        # print(rec[row])
+        # row=row+1
 
     
-    # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-    sql = "delete from Plex.account_activity_summary WHERE pcn = ? and period = ?"
-    rowcount=cursor2.execute(sql, (pcn,period)).rowcount
-    print_to_stdout(f"delete from Plex.account_activity_summary - rowcount={rowcount}")
-    print_to_stdout(f"delete from Plex.account_activity_summary - messages={cursor2.messages}")
-    cursor2.commit()
+      # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
+      sql = "delete from Plex.account_activity_summary WHERE pcn = ? and period = ? and account_no BETWEEN ? and ?"
+      rowcount=cursor2.execute(sql, (pcn,period,account_no_from,account_no_to)).rowcount
+      print_to_stdout(f"delete from Plex.account_activity_summary - rowcount={rowcount}")
+      print_to_stdout(f"delete from Plex.account_activity_summary - messages={cursor2.messages}")
+      cursor2.commit()
 
-    im2 ='''insert into Plex.account_activity_summary (pcn,period,account_no,beginning_balance,debit,credit,balance,ending_balance)
-    values (?,?,?,?,?,?,?,?)'''
-    # test = rec[0:500]
-    cursor2.fast_executemany = True
-    cursor2.executemany(im2,rec) 
-    cursor2.commit()
+      im2 ='''insert into Plex.account_activity_summary (pcn,period,account_no,beginning_balance,debit,credit,balance,ending_balance)
+      values (?,?,?,?,?,?,?,?)'''
+      cursor2.fast_executemany = True
+      cursor2.executemany(im2,rec) 
+      cursor2.commit()
+
+      # row_count = 2684 on Dec 3, 2024
+      account_no_from = '66666-666-6667'
+      account_no_to = '99999-999-9999'
 
  
     if (period < max_fiscal_period):
@@ -229,7 +237,7 @@ SELECT @MAX_FISCAL_PERIOD
       # Get Max fiscal period
       max_fiscal_period = 0
       # The parameters are needed in the call but the output params are not changed but are in result_args.
-      cursor2.execute(sql, (pcn, year))
+      cursor2.execute(sql_max, (pcn, year))
       row = cursor2.fetchone()
       max_fiscal_period = row[0]
     # print_to_stdout(f"period={period}")

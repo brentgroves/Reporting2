@@ -31,29 +31,29 @@ def print_to_stderr(*a):
     
 try:
   ret = 0
-#%PROD%pcn = (sys.argv[1])
-#%PROD%username = (sys.argv[2])
-#%PROD%password = (sys.argv[3])
-#%PROD%username2 = (sys.argv[4])
-#%PROD%password2 = (sys.argv[5])
-#%PROD%username3 = (sys.argv[6])
-#%PROD%password3 = (sys.argv[7])
-#%PROD%mysql_host = (sys.argv[8])
-#%PROD%mysql_port = (sys.argv[9])
-#%PROD%azure_dw = (sys.argv[10])
+  pcn = (sys.argv[1])
+  username = (sys.argv[2])
+  password = (sys.argv[3])
+  username2 = (sys.argv[4])
+  password2 = (sys.argv[5])
+  username3 = (sys.argv[6])
+  password3 = (sys.argv[7])
+  mysql_host = (sys.argv[8])
+  mysql_port = (sys.argv[9])
+  azure_dw = (sys.argv[10])
 
     # pcn = '300758'
-  pcn = '123681'
-  username = 'mg.odbcalbion'
-  password = 'Mob3xalbion'
-  username2 = 'mgadmin'
-  password2 = 'WeDontSharePasswords1!'
-  username3 = 'root'
-  password3 = 'password'   
-  mysql_host = 'reports31'
+#%DEV%pcn = '123681'
+#%DEV%username = 'mg.odbcalbion'
+#%DEV%password = 'Mob3xalbion'
+#%DEV%username2 = 'mgadmin'
+#%DEV%password2 = 'WeDontSharePasswords1!'
+#%DEV%username3 = 'root'
+#%DEV%password3 = 'password'   
+#%DEV%mysql_host = 'reports31'
     # # mysql_host = 'reports13'
-  mysql_port = '30031'
-  azure_dw = '1'
+#%DEV%mysql_port = '30031'
+#%DEV%azure_dw = '1'
 
     # https://geekflare.com/calculate-time-difference-in-python/
   start_time = datetime.now()
@@ -74,8 +74,11 @@ try:
     # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
     
-    # accounting_period_ranges_dw_import
-    # period range is min open period to year before it
+  # accounting_period_ranges_dw_import
+  # This was originally a call to a SPROC that retrieved data from the 
+  # MySQL DW accounting_period_ranges table. Which had the advantage of
+  # the developer being able to change values of that table if desired
+  # for debugging purposes.
   rowcount=cursor.execute("{call sproc123681_11728751_2112421 (?)}", pcn)
   rows = cursor.fetchall()
   print_to_stdout(f"call sproc123681_11728751_2112421 - rowcount={rowcount}")
@@ -95,7 +98,7 @@ try:
   # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
   
-      # accounting_balance_append_period_range_dw_import
+  # accounting_balance_append_period_range_dw_import
   rowcount=cursor.execute("{call sproc300758_11728751_2000117 (?,?,?)}", pcn,start_period,end_period).rowcount
   rows = cursor.fetchall()
   print_to_stdout(f"call sproc300758_11728751_2000117 - rowcount={rowcount}")
@@ -114,20 +117,19 @@ try:
   """
   cursor2.execute(tsql, (pcn)).rowcount
 
-        # cursor2 = conn2.cursor()
-        # # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
-        # rowcount=cursor2.execute("{call Plex.accounting_balance_delete_period_range}").rowcount
-        # rowcount=cursor2.execute("{call Scratch.accounting_balance_delete_period_range}").rowcount
-        # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-        # The return value is always the cursor itself:
+  # # https://code.google.com/archive/p/pyodbc/wikis/GettingStarted.wiki
+  # rowcount=cursor2.execute("{call Plex.accounting_balance_delete_period_range}").rowcount
+  # rowcount=cursor2.execute("{call Scratch.accounting_balance_delete_period_range}").rowcount
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # The return value is always the cursor itself:
   print_to_stdout(f"call Plex.accounting_balance_delete_period_range - rowcount={rowcount}")
   print_to_stdout(f"call Plex.accounting_balance_delete_period_range - messages={cursor2.messages}")
 
   cursor2.commit()
 
-        # https://github.com/mkleehammer/pyodbc/wiki/Cursor
-        # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
-        # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+  # https://github.com/mkleehammer/pyodbc/wiki/Cursor
+  # https://github.com/mkleehammer/pyodbc/wiki/Features-beyond-the-DB-API#fast_executemany
+  # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
 
   im2 = '''INSERT INTO Plex.accounting_balance (pcn, account_key, account_no, period, debit, credit, balance)
           VALUES(?, ?, ?, ?, ?, ?, ?);'''
@@ -140,7 +142,7 @@ try:
   cursor2.commit()
   cursor2.close()
 
-    # https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
+# https://towardsdatascience.com/how-i-made-inserts-into-sql-server-100x-faster-with-pyodbc-5a0b5afdba5
 except pyodbc.Error as ex:
   ret = 1
   error_msg = ex.args[1]

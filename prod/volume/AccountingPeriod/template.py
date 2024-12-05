@@ -69,7 +69,7 @@ try:
   # https://stackoverflow.com/questions/11451101/retrieving-data-from-sql-using-pyodbc
   cursor = conn.cursor()
     
-  # cursor.execute("{call sproc300758_11728751_2001163 (?)}", params)
+  # accounting_period_dw_import
   cursor.execute("{call sproc300758_11728751_2059406 (?)}", pcn_list)
   rows = cursor.fetchall()
   cursor.close()
