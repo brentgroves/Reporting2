@@ -321,17 +321,17 @@ tm=""
 # set pcn
 pcn=123681
 
-# if [[ $result -eq 0 ]]
-# then # if/then branch
-#   exec 6<>tm-msg
-#   read input <&6 && echo "$script time: ${input}" 1>&4
-#   exec 6<>tm-msg
-#   script="AccountPeriodBalanceRecreatePeriodRange"
-#   printf "\nStarting: $script\n" 1>&4
-#   cd ../AccountPeriodBalanceRecreatePeriodRange
-#   source AccountPeriodBalanceRecreatePeriodRange.sh 
-#   printf "\n$script result=$result"
-# fi
+if [[ $result -eq 0 ]]
+then # if/then branch
+  exec 6<>tm-msg
+  read input <&6 && echo "$script time: ${input}" 1>&4
+  exec 6<>tm-msg
+  script="AccountPeriodBalanceRecreatePeriodRange"
+  printf "\nStarting: $script\n" 1>&4
+  cd ../AccountPeriodBalanceRecreatePeriodRange
+  source AccountPeriodBalanceRecreatePeriodRange.sh 
+  printf "\n$script result=$result"
+fi
 
 # # reset variables
 # em=""
