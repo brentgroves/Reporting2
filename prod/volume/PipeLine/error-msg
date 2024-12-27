@@ -1,12 +1,1 @@
-Traceback (most recent call last):
-  File "/home/brent/src/Reporting2/prod/volume/AccountingYearCategoryType/../misc/script-start.py", line 10, in <module>
-    import mysql.connector
-ModuleNotFoundError: No module named 'mysql'
-Traceback (most recent call last):
-  File "/home/brent/src/Reporting2/prod/volume/AccountingYearCategoryType/./AccountingYearCategoryType.py", line 10, in <module>
-    import mysql.connector
-ModuleNotFoundError: No module named 'mysql'
-Traceback (most recent call last):
-  File "/home/brent/src/Reporting2/prod/volume/AccountingYearCategoryType/../misc/script-end.py", line 10, in <module>
-    import mysql.connector
-ModuleNotFoundError: No module named 'mysql'
+AccountingYearCategoryType.py: [08S01] [DataDirect][ODBC OpenAccess SDK driver][OpenAccess SDK Client]TCP/IP, connection reset by peer (2310) (SQLDriverConnect)

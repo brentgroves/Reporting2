@@ -6,3 +6,11 @@ $4: 202411
 $5: 0
 $6: once
 Starting: AccountingYearCategoryType
+script-start.py: current_time='13:34:02'
+MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (110)
+script-start.py: total time: 0:02:15.685147
+AccountingYearCategoryType.py: 13:36:18
+AccountingYearCategoryType.py: total time: 0:00:03.149816
+script-end.py: current_time='13:36:22'
+MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (110)
+script-end.py: total time: 0:02:15.357235
