@@ -232,7 +232,7 @@ pip install pyodbc
 
 # If start_period_update = 1 the AccountingStartPeriodUpdate script will run
 
-./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202311" "202411" 0 "once"
+./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202312" "202412" 0 "once"
 ```
 
 ## run dbeaver

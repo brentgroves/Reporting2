@@ -128,12 +128,12 @@ export reportId=11
 # printf "\n$script result=$result"
 # printf "\nreportId=$reportId"
 # https://gist.github.com/mihow/9c7f559807069a03e302605691f85572
-set -a
-export $(echo $(cat .env | sed 's/#.*//g'| xargs) | envsubst)
+# set -a
+# export $(echo $(cat .env | sed 's/#.*//g'| xargs) | envsubst)
 
 # source <(cat .env | sed -e '/^#/d;/^\s*$/d' -e "s/'/'\\\''/g" -e "s/=\(.*\)/='\1'/g")
-printf "\nreportId=$reportId"
-set +a
+# printf "\nreportId=$reportId"
+# set +a
 
 # set: set [-abefhkmnptuvxBCHP] [-o option-name] [--] [arg ...]
 
@@ -144,15 +144,15 @@ dm=""
 line=""
 tm=""
 
-if [[ $result -eq 0 ]]
-then # if/then branch
-  script="AccountingYearCategoryType"
-  printf "\nStarting: $script\n" 
-  printf "\nStarting: $script\n" 1>&4
-  cd ../AccountingYearCategoryType
-  source AccountingYearCategoryType.sh 
-  printf "\n$script result=$result"
-fi
+# if [[ $result -eq 0 ]]
+# then # if/then branch
+#   script="AccountingYearCategoryType"
+#   printf "\nStarting: $script\n" 
+#   printf "\nStarting: $script\n" 1>&4
+#   cd ../AccountingYearCategoryType
+#   source AccountingYearCategoryType.sh 
+#   printf "\n$script result=$result"
+# fi
 
 # reset variables
 em=""
@@ -367,17 +367,17 @@ tm=""
 # # WATCH: THERE WAS AN ERROR IN THIS SCRIPT FOR MYSQL THERE WAS A 202213 PERIOD  
 # # "AccountPeriodBalanceRecreateOpenPeriodRange"
 
-# if [[ $result -eq 0 ]]
-# then # if/then branch
-#   exec 6<>tm-msg
-#   read input <&6 && echo "$script time: ${input}" 1>&4
-#   exec 6<>tm-msg
-#   script="AccountPeriodBalanceRecreateOpenPeriodRange"
-#   printf "\nStarting: $script\n" 1>&4
-#   cd ../AccountPeriodBalanceRecreateOpenPeriodRange
-#   source AccountPeriodBalanceRecreateOpenPeriodRange.sh 
-#   printf "\n$script result=$result"
-# fi
+if [[ $result -eq 0 ]]
+then # if/then branch
+  exec 6<>tm-msg
+  read input <&6 && echo "$script time: ${input}" 1>&4
+  exec 6<>tm-msg
+  script="AccountPeriodBalanceRecreateOpenPeriodRange"
+  printf "\nStarting: $script\n" 1>&4
+  cd ../AccountPeriodBalanceRecreateOpenPeriodRange
+  source AccountPeriodBalanceRecreateOpenPeriodRange.sh 
+  printf "\n$script result=$result"
+fi
 
 # # # reset variables
 # # em=""
