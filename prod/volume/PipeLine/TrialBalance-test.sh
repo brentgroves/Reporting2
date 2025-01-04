@@ -363,7 +363,7 @@ line=""
 tm=""
 
 # # set pcn
-# pcn=123681
+pcn=123681
 # # WATCH: THERE WAS AN ERROR IN THIS SCRIPT FOR MYSQL THERE WAS A 202213 PERIOD  
 # # "AccountPeriodBalanceRecreateOpenPeriodRange"
 
