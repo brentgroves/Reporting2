@@ -139,12 +139,12 @@ mongo_port=$4
 mongo_db=$5
 azure_dw=$6
 ./sed-lastpass-yaml.sh reports31 30031 reports32 30332 reports 1
-ssh to cluster
+# ssh to cluster
 kubectl apply -f lastpass.yaml
-on dev system update local passwords in /etc/lastpass
+# on dev system update local passwords in /etc/lastpass
 ./sed-lastpass-sh.sh reports31 30031 reports32 30332 reports 1
 ls /etc/lastpass
-ssh to dev system
+# ssh to dev system
 ./lastpass.sh
 ```
 

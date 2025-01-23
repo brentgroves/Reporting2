@@ -1,4 +1,36 @@
 #!/bin/bash
+# pushd ~/src/Reporting/prod/volume/PipeLine
+# 04-2022 to 04-2023
+# TB-202204_to_202304_on_05-09_DM
+# usage ./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202204" "202304" 0 "once"
+# If start_period_update = 1 the AccountingStartPeriodUpdate script will run
+./truncate-logs.sh
+
+# https://copyconstruct.medium.com/bash-redirection-fun-with-descriptors-e799ec5a3c16
+# Open file descriptor
+exec 3<>error-msg 4<>dbg-msg 5>error-num 6<>tm-msg 
+
+printf "\n\$1: $1" 1>&4
+printf "\n\$2: $2" 1>&4
+printf "\n\$3: $3" 1>&4
+printf "\n\$4: $4" 1>&4
+printf "\n\$5: $5" 1>&4
+printf "\n\$6: $6" 1>&4
+
+export report_name=$1
+export email=$2
+export start_period=$3
+export end_period=$4
+export start_period_update=$5
+export frequency=$5
+
+printf "\nreport_name: $report_name" 
+printf "\nemail: $email" 
+printf "\nstart_period: $start_period" 
+printf "\nend_period: $end_period" 
+printf "\nstart_period_update: $start_period_update" 
+printf "\nfrequency: $frequency\n" 
+
 
 # Get pcn from http request in the future
 export pcn="123681"
