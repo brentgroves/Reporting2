@@ -1,5 +1,9 @@
 # run tb
 
+## Corner Case
+
+On 2/4/25 3 accounts were added and "AccountingYearCategoryType" added the records for 2025 and 2026 but did not add them for 2024. Will this be ok? Yes. The code to handle adding the records to the previous and end periods year using the end_open_period year's "AccountingYearCategoryType" new records was added some time ago for AccountPeriodBalanceRecreatePeriodRange. Added code to handle adding the previous periods year using the end_open_periods year's "AccountingYearCategoryType" new records.
+
 ## Reporting2
 
 Tested the Reporing2 repo on 12/05/24. Removed references to mysql because I was unable to connect to mysql on reports31.
@@ -174,6 +178,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
+TB-202401_to_202501_on_02-04_DM_HL
 TB-202312_to_202412_on_01-08_DM_HL
 TB-202312_to_202412_on_01-07_DM_HL
 TB-202312_to_202412_on_01-06B_DM_HL
@@ -237,7 +242,7 @@ pip install pyodbc
 
 # If start_period_update = 1 the AccountingStartPeriodUpdate script will run
 
-./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202312" "202412" 0 "once"
+./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202401" "202501" 0 "once"
 ```
 
 ## run dbeaver
@@ -319,6 +324,8 @@ go to **[credentials](../../../secrets/namespaces/default/credentials.yaml)**
 and use username2/password2 to authenticate.
 
 **Format of file name**
+TB-202401_to_202501_on_02-04_DM_HL
+
 TB-202311_to_202411_on_12-05_DM_HL
 TB-202310_to_202410_on_11-11_DM_HL
 
