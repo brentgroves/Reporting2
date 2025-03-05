@@ -96,6 +96,7 @@ Had this issue again on 20241004. I ran TrialBalance-test.sh with VS Code open a
 ## Note call to web service did not work until I stopped the MSSQL Server docker container
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
+TB-202402_to_202502_on_03-04_DM_HL
 TB-202311_to_202411_on_12-16_DM_HL
 TB-202310_to_202410_on_11-11_DM_HL
 TB-202310_to_202410_on_11-05_DM_HL
@@ -178,6 +179,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
+TB-202402_to_202502_on_03-04_DM_HL
 TB-202401_to_202501_on_02-04_DM_HL
 TB-202312_to_202412_on_01-08_DM_HL
 TB-202312_to_202412_on_01-07_DM_HL
@@ -242,7 +244,7 @@ pip install pyodbc
 
 # If start_period_update = 1 the AccountingStartPeriodUpdate script will run
 
-./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202401" "202501" 0 "once"
+./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202402" "202502" 0 "once"
 ```
 
 ## run dbeaver
@@ -260,6 +262,7 @@ follow steps
 * with start_period_update = 0 so all the balance records will be
 * pulled from Plex everytime.
  */
+TB-202402_to_202502_on_03-04_DM_HL
 TB-202312_to_202412_on_01-03_DM_HL
 TB-202311_to_202411_on_12-05_DM_HL
 TB-202306_to_202406_on_07-07_DM_HL
@@ -324,6 +327,9 @@ go to **[credentials](../../../secrets/namespaces/default/credentials.yaml)**
 and use username2/password2 to authenticate.
 en
 **Format of file name**
+TB-202402_to_202502_on_03-04B_DM_HL
+TB-202402_to_202502_on_03-04_DM_HL
+
 TB-202401_to_202501_on_02-06B_DM_HL
 TB-202401_to_202501_on_02-06_DM_HL
 TB-202401_to_202501_on_02-05_DM_HL
