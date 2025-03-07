@@ -5,16 +5,20 @@ $3: 202402
 $4: 202502
 $5: 0
 $6: once
-Starting: AccountPeriodBalanceRecreateOpenPeriodRange
-script-start.py: current_time='14:05:37'
+Starting: AccountingBalanceAppendPeriodRange
+script-start.py: current_time='19:37:31'
 MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (110)
-script-start.py: total time: 0:02:11.441644
-AccountPeriodBalanceRecreateOpenPeriodRange.py: Current Time: 14:07:48
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_delete_open_period_range - rowcount=14691
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_delete_open_period_range - messages=[]
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_recreate_open_period_range - rowcount=-1
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_recreate_open_period_range - messages=[]
-AccountPeriodBalanceRecreateOpenPeriodRange.py: total time: 0:00:12.599886
-script-end.py: current_time='14:08:01'
+script-start.py: total time: 0:02:11.950570
+AccountingBalanceAppendPeriodRange.py: Current Time: current_time='19:39:43'
+AccountingBalanceAppendPeriodRange.py: call sproc123681_11728751_2112421 - rowcount=<pyodbc.Cursor object at 0x7f78f4cfd9b0>
+AccountingBalanceAppendPeriodRange.py: call sproc123681_11728751_2112421 - messages=[]
+AccountingBalanceAppendPeriodRange.py: fetch_time=0:00:04.111164
+AccountingBalanceAppendPeriodRange.py: call sproc300758_11728751_2000117 - rowcount=-1
+AccountingBalanceAppendPeriodRange.py: call sproc300758_11728751_2000117 - messages=[]
+AccountingBalanceAppendPeriodRange.py: fetch_time=0:00:06.069865
+AccountingBalanceAppendPeriodRange.py: call Plex.accounting_balance_delete_period_range - rowcount=-1
+AccountingBalanceAppendPeriodRange.py: call Plex.accounting_balance_delete_period_range - messages=[]
+AccountingBalanceAppendPeriodRange.py: total time: 0:00:07.128380
+script-end.py: current_time='19:39:51'
 MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (110)
-script-end.py: total time: 0:02:12.435749
+script-end.py: total time: 0:02:11.625178
