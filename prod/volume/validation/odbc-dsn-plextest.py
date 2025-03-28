@@ -7,8 +7,8 @@ import pyodbc
 # server = 'localhost\sqlexpress' # for a named instance
 # server = 'myserver,port' # to specify an alternate port
 # MSSQLTest
-username = 'credentials' 
-password = 'credentials' 
+username = 'mg.odbcalbion' 
+password = 'password' 
 cnxn = pyodbc.connect('DSN=PlexTest;UID='+username+';PWD='+ password)
 # server = 'tcp:mgsqlmi.public.48d444e7f69b.database.windows.net,3342' 
 # database = 'mgdw' 
