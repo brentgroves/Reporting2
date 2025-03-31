@@ -8,7 +8,7 @@ import pyodbc
 # server = 'myserver,port' # to specify an alternate port
 # MSSQLTest
 username = 'mg.odbcalbion' 
-password = 'Mob3xalbion' 
+password = 'password' 
 cnxn = pyodbc.connect('DSN=PlexTest;UID='+username+';PWD='+ password)
 # server = 'tcp:mgsqlmi.public.48d444e7f69b.database.windows.net,3342' 
 # database = 'mgdw' 

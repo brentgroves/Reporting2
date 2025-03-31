@@ -34,8 +34,8 @@ try:
   current_time = start_time.strftime("%H:%M:%S")
   print_to_stdout(f"Current Time: {current_time=}")
 session = Session()
-# session.auth = HTTPBasicAuth('MGEdonReportsws@plex.com','9f45e3d-67ed-')
-session.auth = HTTPBasicAuth('BuscheAlbionWs2@plex.com','6afff48-ba19-')
+# session.auth = HTTPBasicAuth('MGEdonReportsws@plex.com','edon')
+session.auth = HTTPBasicAuth('BuscheAlbionWs2@plex.com','albion')
 
 client = Client(wsdl='Plex_SOAP_test.wsdl',transport=Transport(session=session))
 # https://docs.python-zeep.org/en/master/datastructures.html
