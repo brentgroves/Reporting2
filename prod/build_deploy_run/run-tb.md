@@ -1,5 +1,22 @@
 # run tbmmmmn
 
+## Issue 4/2/25
+
+I ran the scripts without running the AccountingAccount script first.  There were actually 2 new accounts and the AccountActivitySummary listed these accounts. I found them after running the AccountingYearCategoryType script and comparing 24 to 2025. This was the account activity:
+
+|pcn    |period |account_no    |beginning_balance|debit   |credit|balance |ending_balance|
+|-------|-------|--------------|-----------------|--------|------|--------|--------------|
+|123,681|202,502|65100-100-0070|0                |0       |0     |0       |0             |
+|123,681|202,503|65100-100-0070|0                |4,979.95|0     |4,979.95|4,979.95      |
+|123,681|202,504|65100-100-0070|4,979.95         |0       |0     |0       |4,979.95      |
+
+|account_no    |
+|--------------|
+|65100-100-0070|
+|68400-000-0070|
+
+These 2 accounts did not show up in the Plex.account_period_balance table. The scripts do not fail because the account_activity_summary records from the new accounts are just ignored. So, if there were new accounts added that day they may not be on the report unless we switch the AccountingAccount and AccountingYearCategoryType scripts to SOAP web services. Add this disclaimer to emails.
+
 ## Issue
 
 If period range script is not ran before balance update script and the period range has changed in plex. Then the balance script will be retrieving records from periods that have not been deleted in the dw. The problem will not be because of the start period because that is calculated based upon the current date.  The problem will be with the end_date because that will be greater than the value in the dw that has not been updated. When the balance script tries to add records in the new end period it will fail because these records have not been deleted.
@@ -106,6 +123,7 @@ Had this issue again on 20241004. I ran TrialBalance-test.sh with VS Code open a
 ## Note call to web service did not work until I stopped the MSSQL Server docker container
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
+TB-202403_to_202503_on_04-02B_DM_HL
 TB-202403_to_202503_on_04-02_DM_HL
 TB-202402_to_202502_on_03-04_DM_HL
 TB-202311_to_202411_on_12-16_DM_HL
@@ -190,6 +208,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
+TB-202403_to_202503_on_04-02B_DM_HL
 TB-202403_to_202503_on_04-02_DM_HL
 TB-202402_to_202502_on_03-04_DM_HL
 TB-202401_to_202501_on_02-04_DM_HL
@@ -274,6 +293,7 @@ follow steps
 * with start_period_update = 0 so all the balance records will be
 * pulled from Plex everytime.
  */
+TB-202403_to_202503_on_04-02B_DM_HL
 TB-202403_to_202503_on_04-02_DM_HL
 TB-202402_to_202502_on_03-04_DM_HL
 TB-202312_to_202412_on_01-03_DM_HL

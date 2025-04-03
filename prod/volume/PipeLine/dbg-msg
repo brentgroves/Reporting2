@@ -6,15 +6,15 @@ $4: 202503
 $5: 0
 $6: once
 Starting: AccountPeriodBalanceRecreateOpenPeriodRange
-script-start.py: current_time='12:49:33'
+script-start.py: current_time='19:57:07'
 MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (110)
-script-start.py: total time: 0:02:10.232058
-AccountPeriodBalanceRecreateOpenPeriodRange.py: Current Time: 12:51:43
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_delete_open_period_range - rowcount=9794
+script-start.py: total time: 0:02:10.867008
+AccountPeriodBalanceRecreateOpenPeriodRange.py: Current Time: 19:59:18
+AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_delete_open_period_range - rowcount=14724
 AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_delete_open_period_range - messages=[]
 AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_recreate_open_period_range - rowcount=-1
 AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_recreate_open_period_range - messages=[]
-AccountPeriodBalanceRecreateOpenPeriodRange.py: total time: 0:00:01.399716
-script-end.py: current_time='12:51:45'
+AccountPeriodBalanceRecreateOpenPeriodRange.py: total time: 0:00:01.531355
+script-end.py: current_time='19:59:19'
 MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (110)
-script-end.py: total time: 0:02:11.340947
+script-end.py: total time: 0:02:11.173876
