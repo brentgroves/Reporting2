@@ -123,6 +123,7 @@ Had this issue again on 20241004. I ran TrialBalance-test.sh with VS Code open a
 ## Note call to web service did not work until I stopped the MSSQL Server docker container
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
+TB-202404_to_202504_on_05-01_DM_HL
 TB-202403_to_202503_on_04-02B_DM_HL
 TB-202403_to_202503_on_04-02_DM_HL
 TB-202402_to_202502_on_03-04_DM_HL
@@ -208,6 +209,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
+TB-202404_to_202504_on_05-01_DM_HL
 TB-202403_to_202503_on_04-04_DM_HL
 TB-202403_to_202503_on_04-03_DM_HL
 TB-202403_to_202503_on_04-02B_DM_HL
@@ -277,7 +279,7 @@ pip install pyodbc
 
 # If start_period_update = 1 the AccountingStartPeriodUpdate script will run
 
-./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202403" "202503" 0 "once"
+./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202404" "202504" 0 "once"
 ```
 
 ## run dbeaver
@@ -295,6 +297,7 @@ follow steps
 * with start_period_update = 0 so all the balance records will be
 * pulled from Plex everytime.
  */
+TB-202404_to_202504_on_05-01_DM_HL
 TB-202403_to_202503_on_04-04_DM_HL
 TB-202403_to_202503_on_04-03_DM_HL
 TB-202403_to_202503_on_04-02B_DM_HL
