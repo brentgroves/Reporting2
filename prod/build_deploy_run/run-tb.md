@@ -215,6 +215,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
+TB-202404_to_202504_on_05-06B_DM_HL
 TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-01_DM_HL
 TB-202404_to_202504_on_05-01_DM_HL
@@ -305,6 +306,7 @@ follow steps
 * with start_period_update = 0 so all the balance records will be
 * pulled from Plex everytime.
  */
+TB-202404_to_202504_on_05-06B_DM_HL
 TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-05_DM_HL
 TB-202404_to_202504_on_05-02_DM_HL
@@ -378,6 +380,7 @@ go to **[credentials](../../../secrets/namespaces/default/credentials.yaml)**
 and use username2/password2 to authenticate.
 en
 **Format of file name**
+TB-202404_to_202504_on_05-06B_DM_HL
 TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-05_DM_HL
 TB-202403_to_202503_on_04-04_DM_HL
