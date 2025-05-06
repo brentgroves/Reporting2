@@ -1,5 +1,9 @@
 # run tbmmmmn
 
+## Issue 5/6/25
+
+AccountingBalanceAppendPeriodRange failed the first time I ran it with a time of 319 econds it normally only takes 138 seconds. I logged into Plex SQL SDE and it seemed to have a problem running a simple query.  I shut down my browser and the examined the script.  It failed before deleting the account balances in the script that retrieves the period ranges. I tried the Plex period range script from the Plex SDE and it worked this time.  I then reran the AccountingBalanceAppendPeriodRange script and it worked and took the usual time. I then ran the AccountActivitySummaryGetOpenPeriodRange script and it failed with a time of 232 seconds and the account activity summary records were not deleted. Examined this script and it to calls accounting_period_ranges_dw_import so I ran this query from Plex SDE and it worked fine. I reran the AccountActivitySummaryGetOpenPeriodRange script and it worked.
+
 ## Issue 4/2/25
 
 I ran the scripts without running the AccountingAccount script first.  There were actually 2 new accounts and the AccountActivitySummary listed these accounts. I found them after running the AccountingYearCategoryType script and comparing 24 to 2025. This was the account activity:
@@ -123,6 +127,7 @@ Had this issue again on 20241004. I ran TrialBalance-test.sh with VS Code open a
 ## Note call to web service did not work until I stopped the MSSQL Server docker container
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
+TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-05_DM_HL
 TB-202404_to_202504_on_05-01_DM_HL
 TB-202403_to_202503_on_04-02B_DM_HL
@@ -210,6 +215,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
+TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-01_DM_HL
 TB-202404_to_202504_on_05-01_DM_HL
 TB-202403_to_202503_on_04-04_DM_HL
@@ -299,6 +305,7 @@ follow steps
 * with start_period_update = 0 so all the balance records will be
 * pulled from Plex everytime.
  */
+TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-05_DM_HL
 TB-202404_to_202504_on_05-02_DM_HL
 TB-202404_to_202504_on_05-01_DM_HL
@@ -371,6 +378,7 @@ go to **[credentials](../../../secrets/namespaces/default/credentials.yaml)**
 and use username2/password2 to authenticate.
 en
 **Format of file name**
+TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-05_DM_HL
 TB-202403_to_202503_on_04-04_DM_HL
 TB-202403_to_202503_on_04-03B_DM_HL
