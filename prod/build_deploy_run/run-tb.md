@@ -215,6 +215,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
+TB-202404_to_202504_on_06-02_DM_HL
 TB-202404_to_202504_on_05-06B_DM_HL
 TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-01_DM_HL
@@ -288,7 +289,7 @@ pip install pyodbc
 
 # If start_period_update = 1 the AccountingStartPeriodUpdate script will run
 
-./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202404" "202504" 0 "once"
+./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202405" "202505" 0 "once"
 ```
 
 ## run dbeaver
@@ -306,6 +307,7 @@ follow steps
 * with start_period_update = 0 so all the balance records will be
 * pulled from Plex everytime.
  */
+TB-202405_to_202505_on_06-02_DM_HL
 TB-202404_to_202504_on_05-06B_DM_HL
 TB-202404_to_202504_on_05-06_DM_HL
 TB-202404_to_202504_on_05-05_DM_HL
