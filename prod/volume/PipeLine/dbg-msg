@@ -5,16 +5,21 @@ $3: 202405
 $4: 202505
 $5: 0
 $6: once
-Starting: AccountPeriodBalanceRecreateOpenPeriodRange
-script-start.py: current_time='20:42:35'
+Starting: AccountingYearCategoryType
+script-start.py: current_time='17:27:11'
 MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (110)
-script-start.py: total time: 0:02:11.021161
-AccountPeriodBalanceRecreateOpenPeriodRange.py: Current Time: 20:44:46
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_delete_open_period_range - rowcount=9820
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_delete_open_period_range - messages=[]
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_recreate_open_period_range - rowcount=-1
-AccountPeriodBalanceRecreateOpenPeriodRange.py: call Plex.account_period_balance_recreate_open_period_range - messages=[]
-AccountPeriodBalanceRecreateOpenPeriodRange.py: total time: 0:00:01.631885
-script-end.py: current_time='20:44:48'
+script-start.py: total time: 0:02:10.849804
+AccountingYearCategoryType.py: 17:29:22
+AccountingYearCategoryType.py: call sproc300758_11728751_1999909 - rowcount=-1
+AccountingYearCategoryType.py: call sproc300758_11728751_1999909 - messages=[]
+AccountingYearCategoryType.py: fetch_time=0:00:02.769581
+AccountingYearCategoryType.py: delete from Plex.accounting_account_year_category_type 
+  where year between 2025 and 2026 
+  and pcn in (123681) - rowcount=9832
+AccountingYearCategoryType.py: delete from Plex.accounting_account_year_category_type 
+  where year between 2025 and 2026 
+  and pcn in (123681) - messages=[]
+AccountingYearCategoryType.py: total time: 0:00:04.402567
+script-end.py: current_time='17:29:27'
 MySQL error:  2003 (HY000): Can't connect to MySQL server on 'reports31:30031' (110)
-script-end.py: total time: 0:02:11.086128
+script-end.py: total time: 0:02:10.232797
