@@ -310,6 +310,7 @@ follow steps
 * with start_period_update = 0 so all the balance records will be
 * pulled from Plex everytime.
  */
+TB-202405_to_202505_on_06-04_DM_HL
 TB-202405_to_202505_on_06-02_DM_HL
 TB-202404_to_202504_on_05-06B_DM_HL
 TB-202404_to_202504_on_05-06_DM_HL
