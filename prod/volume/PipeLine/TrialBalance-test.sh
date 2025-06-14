@@ -161,17 +161,17 @@ dm=""
 line=""
 tm=""
 
-if [[ $result -eq 0 ]]
-then # if/then branch
-  exec 6<>tm-msg
-  read input <&6 && echo "$script time: ${input}" 1>&4
-  exec 6<>tm-msg
-  script="AccountingAccount"
-  printf "\nStarting: $script\n" 1>&4
-  cd ../AccountingAccount
-  source AccountingAccount.sh 
-  printf "\n$script result=$result"
-fi
+# if [[ $result -eq 0 ]]
+# then # if/then branch
+#   exec 6<>tm-msg
+#   read input <&6 && echo "$script time: ${input}" 1>&4
+#   exec 6<>tm-msg
+#   script="AccountingAccount"
+#   printf "\nStarting: $script\n" 1>&4
+#   cd ../AccountingAccount
+#   source AccountingAccount.sh 
+#   printf "\n$script result=$result"
+# fi
 
 
 # reset variables
@@ -367,17 +367,17 @@ pcn=123681
 # # WATCH: THERE WAS AN ERROR IN THIS SCRIPT FOR MYSQL THERE WAS A 202213 PERIOD  
 # # "AccountPeriodBalanceRecreateOpenPeriodRange"
 
-# if [[ $result -eq 0 ]]
-# then # if/then branch
-#   exec 6<>tm-msg
-#   read input <&6 && echo "$script time: ${input}" 1>&4
-#   exec 6<>tm-msg
-#   script="AccountPeriodBalanceRecreateOpenPeriodRange"
-#   printf "\nStarting: $script\n" 1>&4
-#   cd ../AccountPeriodBalanceRecreateOpenPeriodRange
-#   source AccountPeriodBalanceRecreateOpenPeriodRange.sh 
-#   printf "\n$script result=$result"
-# fi
+if [[ $result -eq 0 ]]
+then # if/then branch
+  exec 6<>tm-msg
+  read input <&6 && echo "$script time: ${input}" 1>&4
+  exec 6<>tm-msg
+  script="AccountPeriodBalanceRecreateOpenPeriodRange"
+  printf "\nStarting: $script\n" 1>&4
+  cd ../AccountPeriodBalanceRecreateOpenPeriodRange
+  source AccountPeriodBalanceRecreateOpenPeriodRange.sh 
+  printf "\n$script result=$result"
+fi
 
 # # # reset variables
 # # em=""
