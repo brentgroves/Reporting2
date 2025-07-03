@@ -174,6 +174,7 @@ tm=""
 # fi
 
 
+
 # reset variables
 em=""
 emline=""
@@ -212,6 +213,7 @@ tm=""
 #   source AccountingPeriodRanges.sh 
 #   printf "\n$script result=$result"
 # fi
+
 
 # reset variables
 em=""

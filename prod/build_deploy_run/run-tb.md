@@ -217,6 +217,7 @@ cd ~/src/Reporting2/prod/volume/PipeLine
 
 "Heather Luttrell" <Heather.Luttrell@Linamar.com>
 "Dan Martin" <dan.martin@linamar.com>
+TB-202406_to_202506_on_07-02_DM_HL
 TB-202406_to_202506_on_07-01_DM_HL
 TB-202405_to_202505_on_06-05_DM_HL
 TB-202405_to_202505_on_06-04_DM_HL
@@ -296,6 +297,9 @@ pip install pyodbc
 # If start_period_update = 1 the AccountingStartPeriodUpdate script will run
 
 ./TrialBalance-test.sh "TB" "bgroves@buschegroup.com" "202406" "202506" 0 "once"
+
+AccountingBalanceAppendPeriodRange.py: error [23000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK__accounti__34E7554F34C584AF'. Cannot insert duplicate key in object 'Plex.accounting_balance'. The duplicate key value is (123681, 709237, 202505). (2627) (SQLExecute)
+AccountingBalanceAppendPeriodRange.py: error ('23000', "[23000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK__accounti__34E7554F34C584AF'. Cannot insert duplicate key in object 'Plex.accounting_balance'. The duplicate key value is (123681, 709237, 202505). (2627) (SQLExecute)")
 ```
 
 ## run dbeaver
